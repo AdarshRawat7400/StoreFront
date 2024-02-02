@@ -1,0 +1,53 @@
+{% load socialaccount %}
+
+{% get_providers as socialaccount_providers %}
+
+<style>
+    .socialaccount_providers {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+    }
+
+    .socialaccount_provider {
+        display: inline-block;
+        margin: 10px;
+        padding: 8px 15px;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        border-radius: 5px;
+        font-weight: bold;
+        /* Add your additional styling here */
+    }
+
+    /* Customize styles for each provider */
+    .socialaccount_provider.google {
+        background-color: #4285F4;
+    }
+
+    .socialaccount_provider.facebook {
+        background-color: #3B5998;
+    }
+    /* Add more provider-specific styling as needed */
+</style>
+
+<ul class="socialaccount_providers">
+    {% for provider in socialaccount_providers %}
+        {% if provider.id == "openid" %}
+            {% for brand in provider.get_brands %}
+                <li>
+                    <a title="{{brand.name}}" 
+                       class="socialaccount_provider {{provider.id}} {{brand.id}}" 
+                       href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
+                    >{{brand.name}}</a>
+                </li>
+            {% endfor %}
+        {% endif %}
+        <li>
+            <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
+        </li>
+    {% endfor %}
+</ul>

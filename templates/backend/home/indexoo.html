@@ -1,0 +1,101 @@
+{% extends "backend/layouts/base.html" %}
+
+{% block title %}Static Page{% endblock title %}
+
+{% block content %}
+
+  <!-- Fixed Promotion Image on the Side -->
+  <!-- <div class="fixed-promotion-image">
+    <img src="/static/assets/img/faces/marc.jpg" class="d-block w-100" alt="Fixed Promotion Image">
+  </div>
+  End Fixed Promotion Image -->
+
+  <div class="content-with-promotion">
+
+    <!-- Static Live Sale Section -->
+    <div class="container mt-5">
+      <div class="row bg-danger text-center p-3 text-white border-bottom shadow">
+        <h1>SALE IS LIVE NOW</h1>
+        <span>5% Instant Discount on Axis Bank Credit and Debit Card</span>
+        <small class="fw-lighter">Term and Condition Applied (For details visit Bank's official Website)</small>
+      </div>
+    </div>
+    <!-- End Static Live Sale Section -->
+
+    <!-- Static Product Sliders -->
+    <div class="m-3">
+      {% for row in "x"|ljust:"10" %}
+      <div class="row">
+        {% for col in "x"|ljust:"20" %}
+          <div class="col-md-3">
+            {% with unique_index=row|length|add:forloop.parentloop.counter0|add:forloop.counter0|add:1 %}
+              <a href="#" class="btn">
+                <div class="item">
+                  <img src="/static/assets/img/faces/marc.jpg" alt="" height="200px" />
+                  <span class="fw-bold">Static Product {{ unique_index }}</span><br />
+                  <span class="fs-5">$499</span>
+                </div>
+              </a>
+            {% endwith %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+    
+    
+    </div>
+    <!-- End Static Product Sliders -->
+
+    <!-- Static Payment Info Section -->
+    <div class="container my-5">
+      <div class="row">
+        <!-- Add your static payment info section content here -->
+      </div>
+    </div>
+    <!-- End Static Payment Info Section -->
+
+    <!-- Add other static sections as needed -->
+
+  </div>
+
+{% endblock content %}
+
+{% block stylesheets %}
+  <!-- Include your custom stylesheets for the static page -->
+  <style>
+    /* Styles for fixed promotion image */
+    .fixed-promotion-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200px; /* Adjust as needed */
+      height: 100%;
+      overflow: hidden;
+      z-index: 999;
+      background-color: #f0f0f0; /* Change background color */
+    }
+
+    .content-with-promotion {
+      margin-left: 200px; /* Width of the fixed promotion image */
+    }
+
+    /* Styles for product blocks */
+    .item {
+      border: 1px solid #ddd; /* Add a border to each product block */
+      margin-bottom: 10px; /* Adjust margin as needed */
+      padding: 10px; /* Add padding to each product block */
+    }
+  </style>
+{% endblock stylesheets %}
+
+{% block javascripts %}
+  <!-- Include your custom scripts for the static page -->
+  <script>
+    // Initialize static sliders if needed
+    $(document).ready(function () {
+      $('#staticSlider1').owlCarousel();
+      $('#staticSlider2').owlCarousel();
+      // Add more if needed
+    });
+  </script>
+{% endblock javascripts %}

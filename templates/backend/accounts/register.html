@@ -1,0 +1,156 @@
+{% extends "backend/layouts/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %} Create Account {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+
+  <div class="row justify-content-center"> <!-- Center the content horizontally -->
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title">
+            Create Account
+          </h4>
+        </div>
+        <div class="card-body">
+
+          <h6 class="card-category">
+            {% include 'backend/includes/_messages.html' %}
+
+              <!-- {% if msg %}
+                <span class="text-danger">{{ msg | safe }}</span>
+              {% else %}
+                Add your credentials
+              {% endif %}   -->
+          </h6>
+          
+          <br />
+
+          {% if success %}
+
+            <p class="">
+              Please <a href="{% url 'admin:login' %}" class="text-black text-small">authenticate</a> using the new account.
+            </p>  
+
+          {% else %}
+
+            <form  role="form" action="{% url 'admin:register' %}" method="post">
+                
+              {% csrf_token %} 
+              
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Username</label>
+                    {{ form.username }}
+                  </div>
+                  <span class="text-danger">{{ form.username.errors }}</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Email</label>
+                    {{ form.email }}
+                  </div>
+                  <span class="text-danger">{{ form.email.errors }}</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Password</label>
+                    {{ form.password1 }}
+                  </div>
+                  <span class="text-danger">{{ form.password1.errors }}</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Password Check</label>
+                    {{ form.password2 }}
+                  </div>
+                  <span class="text-danger">{{ form.password2.errors }}</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Phone Number</label>
+                    {{ form.phone_number }}
+                  </div>
+                  <span class="text-danger">{{ form.phone_number.errors }}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Date of Birth</label>
+                    {{ form.dob|as_crispy_field }}
+                  </div>
+                  <span class="text-danger">{{ form.dob.errors }}</span>
+                </div>
+              </div>
+
+             
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Address</label>
+                    {{ form.address }}
+                  </div>
+                  <span class="text-danger">{{ form.address.errors }}</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                    <button type="submit" name="register" class="btn btn-primary btn-block">Register</button>
+                </div>
+                <div class="col-md-6">
+                    <a href="{% url 'admin:auth0-login' %}" class="btn btn-primary" onclick="openDetachedPopup(event)">
+                        <i class="fas fa-users mr-2"></i> Social Auth
+                    </a>
+                </div>
+            </div>
+            
+
+              <div class="text-center">
+                Have an account? <a href="{% url 'admin:login' %}" class="text-primary">Login</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+            </form>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<!-- In your base.html, include the following in the head section -->
+<script>
+
+  
+</script>
+
+
+{% endblock javascripts %}

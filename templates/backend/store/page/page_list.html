@@ -1,0 +1,142 @@
+{% extends "backend/layouts/base.html" %}
+{% load i18n static %}
+
+{% block title %} Page List {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+   
+/* Optional: If you want a fixed height, adjust the following styles */
+#descriptionModal .modal-body {
+  max-height: 450px; /* Set your desired fixed height */
+  overflow-y: auto;
+}
+/* Updated CSS for better heading visibility */
+#descriptionModal .modal-header {
+  background-color: #8e24aa;  /* Purple color */
+  color: #fff;  /* White text */
+  border-bottom: 1px solid #dee2e6;  /* Optional: Add a border for separation */
+}
+
+#descriptionModal .modal-header h5.modal-title {
+  margin: 0;  /* Remove default margin */
+}
+
+#descriptionModal .close {
+  color: #fff;  /* White close button text */
+}
+  /* Add any additional stylesheets here */
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">{% trans "Pages" %}</h4>
+      </div>
+      <div class="card-body">
+        {% include 'backend/includes/_messages.html' %}
+
+        <div class="mb-3">
+          <a href="{% url 'store:page-create' %}" class="btn btn-success">{% trans "Create Page" %}</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table" id="pagesTable" style="width: 100%;">
+            <thead class="text-primary">
+              <th>{% trans "Id" %}</th>
+              <th>{% trans "Name" %}</th>
+              <th>{% trans "Slug" %}</th>
+              <th>{% trans "Category" %}</th>
+              <th>{% trans "Content" %}</th>
+              <th>{% trans "Is Active" %}</th>
+              <th>{% trans "Actions" %}</th>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Updated modal structure -->
+<div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-purple text-white">
+        <h5 class="modal-title" id="descriptionModalLabel">Content</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="descriptionModalContent">
+        <!-- Description content will be inserted here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal">{% trans "Close" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+  <!-- Include jQuery and DataTables JS files -->
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable with options
+      $('#pagesTable').DataTable({
+        "serverSide": true,
+        "ajax": "{% url 'store:page-list-data' %}",
+        "columns": [
+          {"data": "id", "orderable": false},
+          {"data": "name", "orderable": true},
+          {"data": "slug", "orderable": true},
+          {"data": "category", "orderable": true},
+          {"data": "content", "orderable": false},
+          {"data": "is_active", "orderable": true},
+          {"data": "actions", "orderable": false},
+        ],
+        "order": [
+          [1, 'asc']  // Default ordering by the second column (0-based index), which is "name"
+        ],
+        dom: 'Bfrtip',
+        "buttons": [
+          { extend: 'copy', className: 'btn btn-info btn-sm mr-2' },
+          { extend: 'excel', className: 'btn btn-success btn-sm mr-2' },
+          { extend: 'pdf', className: 'btn btn-danger btn-sm' }
+        ],
+        
+        "paging": true,
+        "lengthChange": true,
+        "pageLength": 20,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "responsive": true,
+        "autoFill": true,
+        "colReorder": true
+      });
+    });
+
+    // Handle the click event of the description button
+    $('#pagesTable').on('click', '.view-description', function() {
+      var rowId = $(this).data('row-id');
+      var descriptionData = $('#descriptionData-' + rowId).html();
+      
+      // Update the modal content
+      $('#descriptionModalContent').html(descriptionData);
+
+      // Show the modal
+      $('#descriptionModal').modal('show');
+    });
+  </script>
+{% endblock javascripts %}

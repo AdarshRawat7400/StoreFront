@@ -1,0 +1,93 @@
+{% extends "backend/layouts/base.html" %}
+{% load i18n static %}
+
+{% block title %} UI Tables {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+ 
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title ">Customers</h4>
+        <!-- <p class="card-category"> Here is a subtitle for this table</p> -->
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table" id="customersTable"  style="width: 100%;">
+            <thead class=" text-primary">
+              <th>{% trans "Id" %}</th>
+              <th>{% trans "Created Date" %}</th>
+              <th>{% trans "Username" %}</th>
+              <th>{% trans "Email" %}</th>
+              <th>{% trans "Balance" %}</th>
+              <th>{% trans "PhoneNumber" %}</th>
+              <th>{% trans "Country" %}</th>
+              <th>{% trans "State" %}</th>
+              <th>{% trans "Postal-Code" %}</th>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+  <!-- Include jQuery and DataTables JS files -->
+
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable with options
+      $('#customersTable').DataTable({
+        "serverSide": true,
+        "ajax": "{% url 'admin:customers-data' %}",
+        "columns": [
+          {"data": "id","orderable": false},
+          {"data": "created","orderable": true},
+          {"data": "username","orderable": true},
+          {"data": "email","orderable": false},
+          {"data": "balance","orderable": false},
+          {"data": "phone_number","orderable": false},
+          {"data": "country","orderable": true},
+          {"data": "state","orderable": true},
+          {"data": "postal_code","orderable": false},
+          
+
+        ],
+        "order": [
+            [2, 'desc']  // Default ordering by the third column (0-based index), which is "created"
+        ],
+        dom: 'Bfrtip',
+        "buttons": [
+            { extend: 'copy', className: 'btn btn-info btn-sm mr-2' }, // Added mr-2 for right margin
+            { extend: 'excel', className: 'btn btn-success btn-sm mr-2' },
+            { extend: 'pdf', className: 'btn btn-danger btn-sm' }
+        ],
+        
+        "paging": true,
+        "lengthChange": true,
+        "pageLenght": 20,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "responsive": true,
+        "autoFill": true,
+        "colReorder": true
+      });
+    
+    
+    });
+  </script>
+{% endblock javascripts %}

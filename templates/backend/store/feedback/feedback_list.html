@@ -1,0 +1,136 @@
+{% extends "backend/layouts/base.html" %}
+{% load i18n static %}
+
+{% block title %} Feedback List {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+  /* Add any additional stylesheets here */
+  
+/* Optional: If you want a fixed height, adjust the following styles */
+#feedbackModal .modal-body {
+  max-height: 450px; /* Set your desired fixed height */
+  overflow-y: auto;
+}
+/* Updated CSS for better heading visibility */
+#feedbackModal .modal-header {
+  background-color: #8e24aa;  /* Purple color */
+  color: #fff;  /* White text */
+  border-bottom: 1px solid #dee2e6;  /* Optional: Add a border for separation */
+}
+
+#feedbackModal .modal-header h5.modal-title {
+  margin: 0;  /* Remove default margin */
+}
+
+#feedbackModal .close {
+  color: #fff;  /* White close button text */
+}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">{% trans "Feedbacks" %}</h4>
+      </div>
+      <div class="card-body">
+        {% include 'backend/includes/_messages.html' %}
+
+        <div class="table-responsive">
+          <table class="table" id="feedbacksTable" style="width: 100%;">
+            <thead class="text-primary">
+              <th>{% trans "Id" %}</th>
+              <th>{% trans "Email" %}</th>
+              <th>{% trans "Customer" %}</th>
+              <th>{% trans "Feedback" %}</th>
+              <th>{% trans "Actions" %}</th>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Updated modal structure -->
+<div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header bg-purple text-white">
+            <h5 class="modal-title" id="descriptionModalLabel">Feedback</h5>
+            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+      <div class="modal-body" id="feedbackModalContent">
+        <!-- Feedback content will be inserted here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal">{% trans "Close" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+  <!-- Include jQuery and DataTables JS files -->
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable with options
+      $('#feedbacksTable').DataTable({
+        "serverSide": true,
+        "ajax": "{% url 'store:feedback-list-data' %}",
+        "columns": [
+          {"data": "id", "orderable": false},
+          {"data": "email", "orderable": true},
+          {"data": "customer", "orderable": true},
+          {"data": "feedback", "orderable": false},
+          {"data": "actions", "orderable": false},
+        ],
+        "order": [
+          [1, 'asc']  // Default ordering by the second column (0-based index), which is "email"
+        ],
+        dom: 'Bfrtip',
+        "buttons": [
+          { extend: 'copy', className: 'btn btn-info btn-sm mr-2' },
+          { extend: 'excel', className: 'btn btn-success btn-sm mr-2' },
+          { extend: 'pdf', className: 'btn btn-danger btn-sm' }
+        ],
+        
+        "paging": true,
+        "lengthChange": true,
+        "pageLength": 20,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "responsive": true,
+        "autoFill": true,
+        "colReorder": true
+      });
+    });
+
+    // Handle the click event of the feedback button
+    $('#feedbacksTable').on('click', '.view-description', function() {
+        console.log("IM GETTING CALLED")
+      var rowId = $(this).data('row-id');
+      var feedbackData = $('#feedbackData-' + rowId).html();
+      
+      // Update the modal content
+      $('#feedbackModalContent').html(feedbackData);
+
+      // Show the modal
+      $('#feedbackModal').modal('show');
+    });
+  </script>
+{% endblock javascripts %}

@@ -1,0 +1,111 @@
+{% extends "backend/layouts/base.html" %}
+{% load i18n static %}
+
+{% block title %} Product List {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+  /* Add any additional stylesheets here */
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">{% trans "Products" %}</h4>
+      </div>
+      <div class="card-body">
+        {% include 'backend/includes/_messages.html' %}
+
+        <div class="mb-3">
+          <a href="{% url 'store:product-create' %}" class="btn btn-success">{% trans "Create Product" %}</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table" id="productsTable" style="width: 100%;">
+            <thead class="text-primary">
+                <th>{% trans "Id" %}</th>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Price" %}</th>
+                <th>{% trans "Category" %}</th>
+                <th>{% trans "Stock Quantity" %}</th>
+                <th>{% trans "Is Active" %}</th>
+                <th>{% trans "Brand" %}</th>
+                <th>{% trans "Is Featured" %}</th>
+                <th>{% trans "Label" %}</th>
+                <th>{% trans "Image" %}</th>
+                <th>{% trans "Description Short" %}</th>
+                <th>{% trans "Actions" %}</th>
+              </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+  $(document).ready(function() {
+    // Initialize DataTable with options
+    $('#productsTable').DataTable({
+      "serverSide": true,
+      "ajax": "{% url 'store:product-list-data' %}",
+      "columns": [
+        {"data": "id", "orderable": false},
+        {"data": "name", "orderable": true},
+        {"data": "price", "orderable": false},
+        {"data": "category", "orderable": true},
+        {"data": "stock_quantity", "orderable": false},
+        {"data": "is_active", "orderable": true},
+        {"data": "brand", "orderable": true},
+        {"data": "is_featured", "orderable": true},
+        {"data": "label", "orderable": true},
+        {"data": "image", "orderable": false},
+        {"data": "description_short", "orderable": false},
+        {"data": "actions", "orderable": false},
+      ],
+      "order": [
+        [1, 'asc']  // Default ordering by the second column (0-based index), which is "name"
+      ],
+      dom: 'Bfrtip',
+      "buttons": [
+        { extend: 'copy', className: 'btn btn-info btn-sm mr-2' },
+        { extend: 'excel', className: 'btn btn-success btn-sm mr-2' },
+        { extend: 'pdf', className: 'btn btn-danger btn-sm' }
+      ],
+      "paging": true,
+      "lengthChange": true,
+      "pageLength": 20,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      "responsive": true,
+      "autoFill": true,
+      "colReorder": true
+    });
+  });
+
+  // Handle the click event of the description button
+  $('#productsTable').on('click', '.view-description', function() {
+    var rowId = $(this).data('row-id');
+    var descriptionData = $('#descriptionData-' + rowId).html();
+    
+    // Update the modal content
+    $('#descriptionModalContent').html(descriptionData);
+
+    // Show the modal
+    $('#descriptionModal').modal('show');
+  });
+
+</script>
+{% endblock javascripts %}

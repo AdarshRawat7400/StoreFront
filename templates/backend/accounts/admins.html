@@ -1,0 +1,148 @@
+{% extends "backend/layouts/base.html" %}
+
+{% block title %} Create Account {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="row justify-content-center">
+    <!-- Admin Form on the Right Side -->
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title">
+            Create Admin Account
+          </h4>
+        </div>
+        <div class="card-body">
+
+          <h6 class="card-category">
+            {% include 'backend/includes/_messages.html' %}
+          </h6>
+          
+          <br />
+
+          {% if success %}
+
+            <p class="">
+              Please <a href="{% url 'admin:login' %}" class="text-black text-small">authenticate</a> using the new account.
+            </p>  
+
+          {% else %}
+            <!-- Create Admin Form -->
+            <form role="form" method="post" action="{% url 'admin:admins' %}">
+                
+              {% csrf_token %} 
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Admin Username</label>
+                    {{ admin_form.username }}
+                  </div>
+                  <span class="text-danger">{{ admin_form.username.errors }}</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Admin Email</label>
+                    {{ admin_form.email }}
+                  </div>
+                  <span class="text-danger">{{ admin_form.email.errors }}</span>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="bmd-label-floating">Phone Number</label>
+                        {{ admin_form.phone_number }}
+                    </div>
+                    <span class="text-danger">{{ admin_form.phone_number.errors }}</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Admin Password</label>
+                    {{ admin_form.password1 }}
+                  </div>
+                  <span class="text-danger">{{ admin_form.password1.errors }}</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Confirm Password</label>
+                    {{ admin_form.password2 }}
+                  </div>
+                  <span class="text-danger">{{ admin_form.password2.errors }}</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" name="register" class="btn btn-primary btn-block">Register Admin</button>
+                </div>
+              </div>
+
+            </form>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+
+    <!-- List of Admins on the Left Side -->
+    <div class="col-md-7">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title">List of Admins</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class=" text-primary">
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+              </thead>
+              <tbody>
+                {% for admin in admins %}
+                  <tr>
+                    <td>{{ admin.id }}</td>
+                    <td>{{ admin.username }}</td>
+                    <td>{{ admin.email }}</td>
+                    <td>{{ admin.phone_number }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<!-- In your base.html, include the following in the head section -->
+<script>
+  $(function () {
+    $("#datetimepicker1").datetimepicker({
+      format: 'DD/MM/YYYY',
+    });
+  });
+</script>
+{% endblock javascripts %}

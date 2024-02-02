@@ -1,0 +1,102 @@
+
+   <!-- <link href="/static/backend/assets/css/material-dashboard.css?v=2.1.2" rel="stylesheet" /> -->
+   
+
+
+<script src="/static/backend/assets/js/core/jquery.min.js"></script>
+<!-- Include jQuery from your project -->
+<script type="text/javascript" src="/static/frontend/vendor/jquery/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+
+<!-- Other scripts that depend on jQuery -->
+<script type="text/javascript" src="/static/frontend/vendor/animsition/js/animsition.min.js"></script>
+<script type="text/javascript" src="/static/frontend/vendor/select2/select2.min.js"></script>
+<script type="text/javascript" src="/static/frontend/vendor/slick/slick.min.js"></script>
+<script type="text/javascript" src="/static/frontend/vendor/countdowntime/countdowntime.js"></script>
+<script type="text/javascript" src="/static/frontend/vendor/lightbox2/js/lightbox.min.js"></script>
+<script type="text/javascript" src="/static/frontend/vendor/sweetalert/sweetalert.min.js"></script>
+
+<!-- Include Popper.js and Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<!-- Continue with the rest of your scripts -->
+<script crossorigin src="/static/frontend/js/react.development.js"></script>
+<script crossorigin src="/static/frontend/js/react-dom.development.js"></script>
+<script type="text/javascript" src="/static/frontend/js/slick-custom.js"></script>
+<script type="text/javascript" src="/static/frontend/js/main.js"></script>
+
+<!-- Initialize scripts dependent on jQuery after it's loaded -->
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Your jQuery-dependent code here
+    $(".selection-1").select2({
+      minimumResultsForSearch: 20,
+      dropdownParent: $("#dropDownSelect1")
+    });
+
+    $(".block2-btn-addcart").each(function() {
+        var nameProduct = $(this)
+            .parent()
+            .parent()
+            .parent()
+            .find(".block2-name")
+            .html();
+
+          var slugProduct = $(this)
+            .parent()
+            .parent()
+            .parent()
+            .find(".block2-slug")
+            .html();
+          
+
+
+        $(this).on("click", function() {
+            // Check if the user is logged in
+            {% if request.user.is_authenticated %}
+                swal(nameProduct, "is added to cart !", "success");
+                addToCart(slugProduct)
+            {% else %}
+                // Redirect to the login page
+                window.location.href = "{% url 'account_login' %}";
+            {% endif %}
+        });
+
+        function addToCart(slugProduct) {
+        // Make an AJAX request to call the Django view
+        $.ajax({
+            type: "POST",
+            url: "{% url 'frontend:add-to-cart' '123' %}".replace('123', slugProduct),
+            data :{
+              csrfmiddlewaretoken: '{{ csrf_token }}'
+
+            },
+            
+            success: function (response) {
+                console.log("MESSAGE", response.message);
+                // Process the message as needed
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+   
+  
+  
+  });
+
+
+  });
+</script>
+
+
+<script>
+  $(document).ready(function() {
+    // Auto fade-out alert messages after 5 seconds
+    $(".alert").fadeTo(5000, 0).slideUp(500, function(){
+      $(this).remove();
+    });
+  });
+</script>

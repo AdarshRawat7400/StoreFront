@@ -1,0 +1,41 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% block content %}
+
+    <!-- Page Content -->
+    <div class="container bgwhite p-t-35 p-b-80 text-center col-md-8">
+        <!-- Page Title -->
+        <h4 class="product-detail-name m-text16 p-b-13">
+            {{ page.name }}
+        </h4>
+
+        <!-- Breadcrumb -->
+        <div class="bread-crumb bgwhite flex-w p-l-52 p-r-15 p-t-30 p-l-15-sm">
+            <a href="/" class="s-text16">
+                Home
+                <i class="fa fa-angle-right m-l-8 m-r-9" aria-hidden="true"></i>
+            </a>
+            <a href="/" class="s-text16">
+                {{ page.category }}   <!-- Display the category name -->
+                <i class="fa fa-angle-right m-l-8 m-r-9" aria-hidden="true"></i>
+            </a>
+            <span class="s-text17">
+                {{ page.name }}   <!-- Display the category name -->
+            </span>
+        </div>
+
+<!-- Content Section -->
+<div class="w-size16 p-t-30 respon5 mx-auto text-center" style="max-width: 800px;">
+    <div class="s-text16" style="text-align: left;">
+        {{ page.content | safe }}
+    </div>
+</div>
+
+
+        <!-- Sidebar Section (optional) -->
+        <!-- <div class="w-size14 p-t-30 respon5">
+            Add additional sections here
+        </div> -->
+    </div>
+
+{% endblock content %}

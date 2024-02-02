@@ -1,0 +1,275 @@
+{% extends "backend/layouts/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} Manage Slides {% endblock %}
+
+{% block stylesheets %}
+
+<style>
+  /* This selector targets the editable element (excluding comments). */
+  .ck-editor__editable_inline:not(.ck-comment__input *) {
+      height: 300px;
+      overflow-y: auto;
+    }
+
+    /* Basic styling for the file input container */
+    .custom-file {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    /* Styling for the input */
+    .custom-file input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* Styling for the button */
+    .custom-file-label {
+      background-color: #2c3e50; /* Matte black background color */
+      color: #ecf0f1; /* Light text color */
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    /* Hover effect for the button */
+    .custom-file:hover .custom-file-label {
+      background-color: #34495e; /* Slightly darker matte black on hover */
+    }
+      /* Basic styling for the file input container */
+      .custom-file {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    /* Styling for the input */
+    .custom-file input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* Styling for the button */
+    .custom-file-label {
+      background-color: #2c3e50; /* Matte black background color */
+      color: #ecf0f1; /* Light text color */
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    /* Hover effect for the button */
+    .custom-file:hover .custom-file-label {
+      background-color: #34495e; /* Slightly darker matte black on hover */
+    }
+</style>
+  <!-- Add any specific stylesheets for the slides management page -->
+{% endblock stylesheets %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <!-- Full-width card -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title">
+            <span id="slide-view-heading">Create Slide</span>
+            <button class="btn btn-primary btn-sm float-end" id="toggle-view-button">Toggle View</button>
+          </h4>
+        </div>
+        <div class="card-body">
+          {% include 'backend/includes/_messages.html' %}
+
+          {% if success %}
+            <p class="text-success">
+              {{ success }}
+            </p>
+          {% endif %}
+          <!-- Create Slide Form -->
+          <form id="slide-form" method="post" enctype="multipart/form-data" action="{% url 'store:manage_slides' %}" style="display: none;">
+            {% csrf_token %}
+            {% crispy create_slide_form %}
+          </form>
+
+          <!-- List of Slides -->
+          <div id="list-of-slides" >
+            <div class="table-responsive">
+              <table class="table" style="height: 300px;">
+                <thead class="text-primary">
+                        <th>ID</th>
+                        <th style="width: 20%;">Caption 1</th>
+                        <th style="width: 20%;">Caption 2</th>
+                        <th>Link</th>
+                        <th>Image</th>
+                        <th>Active</th>
+                        <th>Action</th>
+                    </thead>
+                    <tbody>
+                        {% for slide in slides %}
+                        <tr id="slide-row-{{ slide.id }}" data-caption1="{{ slide.caption1 }}" data-caption2="{{ slide.caption2 }}" data-link="{{ slide.link }}">
+                          <td>{{ slide.id }}</td>
+                            <td>{{ slide.caption1 }}</td>
+                            <td>{{ slide.caption2 }}</td>
+                            <td>
+                              <button class="btn btn-primary btn-sm mt-2" onclick="window.open('{{ slide.link }}', '_blank')">Link</button>
+                          </td>
+                                                    
+                           <td>
+                            <a href="data:image/png;base64,{{ slide.image }}" data-lightbox="slide{{ slide.id }}">
+                              <img src="data:image/png;base64,{{ slide.image }}" alt="{{ slide.caption1 }}" style="width: 100px; height: 50px;">
+                          </a>
+                            
+                          </td>
+                          
+                          <td>
+                            {% if slide.is_active %}
+                                <!-- Show green icon for active slide -->
+                                <i class="material-icons text-success">check_circle</i>
+                            {% else %}
+                                <!-- Show red icon for inactive slide -->
+                                <i class="material-icons text-danger">cancel</i>
+                            {% endif %}
+                        </td>
+                        
+                            <td>
+                              <button class="btn btn-warning btn-sm" onclick="editSlide('{{ slide.id }}')">Edit</button>
+                            <!-- Button for deleting the slide -->
+                            <a href="{% url 'store:manage_slides' %}?action=delete&slide_id={{ slide.id }}" class="btn btn-danger btn-sm" hx-get="confirm('Are you sure you want to delete this slide?') ? '{% url 'store:manage_slides' %}?action=delete&slide_id={{ slide.id }}' : null">Delete</a>
+
+                           <a href="{% url 'store:manage_slides' %}?action=status&slide_id={{ slide.id }}" class="btn {% if slide.is_active %}btn-secondary{% else %}btn-success{% endif %} btn-sm" hx-get="true">
+                              {% if slide.is_active %}
+                                  Deactivate
+                              {% else %}
+                                  Activate
+                              {% endif %}
+                          </a>
+
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Add JavaScript for slide editing and toggling views -->
+<script>
+    console.log("HELLO WORLD0 ", '{{success}}');
+
+function editSlide(slideId) {
+
+  // Assuming each row has data attributes storing the details
+  const row = document.getElementById(`slide-row-${slideId}`);
+  const caption1 = row.getAttribute('data-caption1');
+  const caption2 = row.getAttribute('data-caption2');
+  const link = row.getAttribute('data-link');
+
+  // Update the form fields with the extracted data
+  document.getElementById('id_caption1').value = caption1;
+  document.getElementById('id_caption2').value = caption2;
+  document.getElementById('id_link').value = link;
+
+  // Update other form fields accordingly
+  // You may need to handle file input separately if you have an image field
+
+  // Add a hidden input field for slide_id
+  const slideIdInput = document.createElement('input');
+  slideIdInput.type = 'hidden';
+  slideIdInput.name = 'slide_id';  // Change the name if needed
+  slideIdInput.value = slideId;
+  document.getElementById('slide-form').appendChild(slideIdInput);
+
+  // Hide the "Create Slide" button
+  document.getElementById('toggle-view-button').style.display = 'none';
+
+  // Show the create slides tab
+  const createSlideForm = document.getElementById('slide-form');
+  const listOfSlides = document.getElementById('list-of-slides');
+  const heading = document.getElementById('slide-view-heading');
+  const toggleButton = document.getElementById('toggle-view-button');
+
+  createSlideForm.style.display = 'block';
+  listOfSlides.style.display = 'none';
+  heading.textContent = 'Edit Slide';
+
+  // Set the text content of toggle-view-button to 'List of Slides'
+  toggleButton.textContent = 'List of Slides';
+  // Ensure that toggle-view-button is visible and remains in its place
+  toggleButton.style.display = 'inline-block';  // Use 'inline-block' instead of 'block'
+}
+
+
+// Toggle between create slide and list of slides views
+document.getElementById('toggle-view-button').addEventListener('click', function () {
+  const createSlideForm = document.getElementById('slide-form');
+  const listOfSlides = document.getElementById('list-of-slides');
+  const heading = document.getElementById('slide-view-heading');
+  const toggleButton = document.getElementById('toggle-view-button');
+
+  if (createSlideForm.style.display !== 'none') {
+    createSlideForm.style.display = 'none';
+    listOfSlides.style.display = 'block';
+    heading.textContent = 'List of Slides';
+    toggleButton.textContent = 'Create Slide';
+
+
+    // Clear the form when switching to "List of Slides" view
+    createSlideForm.reset();  // Assuming createSlideForm is a <form> element
+      // Optionally, remove the hidden input field (slide_id)
+    const slideIdInput = document.getElementsByName('slide_id')[0];
+    if (slideIdInput) {
+      slideIdInput.remove();
+    }
+  } else {
+    createSlideForm.style.display = 'block';
+    listOfSlides.style.display = 'none';
+    heading.textContent = 'Create Slide';
+    toggleButton.textContent = 'List of Slides';
+  }
+});
+
+  // Initial state: Show List of Slides by default
+  document.addEventListener('DOMContentLoaded', function () {
+    const createSlideForm = document.getElementById('slide-form');
+    const listOfSlides = document.getElementById('list-of-slides');
+    const heading = document.getElementById('slide-view-heading');
+    const toggleButton = document.getElementById('toggle-view-button');
+
+
+
+    createSlideForm.style.display = 'none';
+    listOfSlides.style.display = 'block';
+    heading.textContent = 'List of Slides';
+    toggleButton.textContent = 'Create Slide';
+  });
+ 
+</script>
+
+{% endblock content %}

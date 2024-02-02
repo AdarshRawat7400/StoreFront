@@ -1,0 +1,74 @@
+{% extends "backend/layouts/base.html" %}
+
+{% block title %} Administrator Login {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="row justify-content-center align-items-center" style="height: 100vh;">
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title">
+            Administrator Login
+          </h4>
+        </div>
+
+        <div class="card-body">
+          {% include 'backend/includes/_messages.html' %}
+
+          <h6 class="card-category">
+              Add your administrator credentials
+          </h6>
+          
+          <br />
+
+          <form role="form" action="{% url 'admin:login' %}" method="post">
+            {% csrf_token %}
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating">Username</label>
+                  <input type="text" name="username" class="form-control" placeholder="Username">
+                </div>
+              </div>
+            </div>
+
+            <br />
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating">Password</label>
+                  <input type="password" name="password" class="form-control" placeholder="Password">
+                </div>
+              </div>
+            </div>
+
+            <br />
+
+            <button type="submit" name="login" class="btn btn-primary pull-left">Login</button>
+            <!-- <a href="{% url 'admin:login' %}" class="btn btn-primary" >
+              <i class="fas fa-users mr-2"></i> Customer Login
+          </a> -->
+           
+            &nbsp; &nbsp; 
+           
+            <div class="clearfix"></div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+</script>
+{% endblock javascripts %}

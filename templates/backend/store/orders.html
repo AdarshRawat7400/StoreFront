@@ -1,0 +1,94 @@
+{% extends "backend/layouts/base.html" %}
+{% load i18n static %}
+
+{% block title %} Orders {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+ 
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Orders</h4>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table" id="ordersTable"  style="width: 100%;">
+            <thead class="text-primary">
+              <th>{% trans "Id" %}</th>
+              <th>{% trans "Order Date" %}</th>
+              <th>{% trans "Reference Code" %}</th>
+              <th>{% trans "Customer" %}</th>
+              <th>{% trans "Total Amount" %}</th>
+              <th>{% trans "Shipping Country" %}</th>
+              <th>{% trans "BA ZipCode" %}</th>
+              <th>{% trans "Payment Status" %}</th>
+              <th>{% trans "Order Status" %}</th>
+              <th>{% trans "Delivery Date" %}</th>
+              <th>{% trans "Tracking Number" %}</th>
+              <th>{% trans "Actions" %}</th>  <!-- Include Actions column -->
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+  <!-- Include jQuery and DataTables JS files -->
+
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable with options
+      $('#ordersTable').DataTable({
+        "serverSide": true,
+        "ajax": "{% url 'store:orders-data' %}",
+        "columns": [
+          {"data": "id","orderable": false},
+          {"data": "order_date","orderable": true},
+          {"data": "ref_code","orderable": true},
+          {"data": "customer__username","orderable": false},
+          {"data": "total_amount","orderable": false},
+          {"data": "shipping_address__country","orderable": true},
+          {"data": "billing_address__zip","orderable": true},
+          {"data": "payment_status","orderable": true},
+          {"data": "order_status","orderable": true},
+          {"data": "delivery_date","orderable": true},
+          {"data": "tracking_number","orderable": false},
+          {"data": "actions","orderable": false},  <!-- Include Actions column -->
+        ],
+        "order": [
+            [1, 'desc']  // Default ordering by the second column (0-based index), which is "order_date"
+        ],
+        dom: 'Bfrtip',
+        "buttons": [
+            { extend: 'copy', className: 'btn btn-info btn-sm mr-2' }, // Added mr-2 for right margin
+            { extend: 'excel', className: 'btn btn-success btn-sm mr-2' },
+            { extend: 'pdf', className: 'btn btn-danger btn-sm' }
+        ],
+        
+        "paging": true,
+        "lengthChange": true,
+        "pageLenght": 20,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "responsive": true,
+        "autoFill": true,
+        "colReorder": true
+      });
+    });
+  </script>
+{% endblock javascripts %}

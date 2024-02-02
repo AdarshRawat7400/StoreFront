@@ -1,0 +1,303 @@
+{% extends "backend/layouts/base.html" %}
+{% load i18n static %}
+
+
+{% block title %} Contact Queries List {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+   
+    /* Optional: If you want a fixed height, adjust the following styles */
+    #queryModal .modal-body {
+      max-height: 450px; /* Set your desired fixed height */
+      overflow-y: auto;
+    }
+    /* Updated CSS for better heading visibility */
+    #queryModal .modal-header {
+      background-color: #8e24aa;  /* Purple color */
+      color: #fff;  /* White text */
+      border-bottom: 1px solid #dee2e6;  /* Optional: Add a border for separation */
+    }
+    
+    #queryModal .modal-header h5.modal-title {
+      margin: 0;  /* Remove default margin */
+    }
+    
+    #queryModal .close {
+      color: #fff;  /* White close button text */
+    }
+
+        /* Optional: If you want a fixed height, adjust the following styles */
+        #queryModal .modal-body {
+      max-height: 450px; /* Set your desired fixed height */
+      overflow-y: auto;
+    }
+    /* Updated CSS for better heading visibility */
+    #answerModal .modal-header {
+      background-color: #8e24aa;  /* Purple color */
+      color: #fff;  /* White text */
+      border-bottom: 1px solid #dee2e6;  /* Optional: Add a border for separation */
+    }
+    
+    #answerModal .modal-header h5.modal-title {
+      margin: 0;  /* Remove default margin */
+    }
+    
+    #answerModal .close {
+      color: #fff;  /* White close button text */
+    }
+      /* Add any additional stylesheets here */
+    </style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">{% trans "Contact Queries" %}</h4>
+      </div>
+      <div class="card-body">
+        {% include 'backend/includes/_messages.html' %}
+
+        <div class="mb-3">
+          <!-- Add a button or link for creating a new contact query if needed -->
+        </div>
+        <div class="table-responsive">
+          <table class="table" id="contactQueriesTable" style="width: 100%;">
+            <thead class="text-primary">
+              <th class="col-md-0">{% trans "Id" %}</th>
+              <th class="col-md-1">{% trans "Created" %}</th>
+              <th class="col-md-1">{% trans "Customer" %}</th>
+              <th class="col-md-2">{% trans "Email" %}</th>
+              <th class="col-md-1">{% trans "Query" %}</th>
+              <th class="col-md-2">{% trans "Answer" %}</th>
+              <th class="col-md-3">{% trans "Actions" %}</th>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Updated modal structure -->
+<div class="modal fade" id="queryModal" tabindex="-1" role="dialog" aria-labelledby="queryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-purple text-white">
+        <h5 class="modal-title" id="queryModalLabel">Query</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="queryModalContent">
+        <!-- Query content will be inserted here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">{% trans "Close" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Updated modal structure for answering queries -->
+<div class="modal fade" id="answerModal" tabindex="-1" role="dialog" aria-labelledby="answerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-purple text-white">
+        <h5 class="modal-title" id="answerModalLabel">Answer Query</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+
+      
+      <div class="modal-body" id="answerModalContent">
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-success btn-sm" id="id_save_answer" data-dismiss="modal">{% trans "Save" %}</button>
+      <button type="button" class="btn btn-info btn-sm" id="id_send_answer" data-dismiss="modal">{% trans "Send Now" %}</button>
+      <button type="button" class="btn btn-danger btn-sm"  data-dismiss="modal">{% trans "Close" %}</button>
+  </div>
+  
+    </div>
+  </div>
+</div>
+
+  
+{% endblock content %}
+
+<!-- Include the JavaScript code -->
+{% block javascripts %}
+<!-- Include CKEditor from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+  <script>
+    
+    $(document).ready(function() {
+
+      // Initialize DataTable with options
+      $('#contactQueriesTable').DataTable({
+        "serverSide": true,
+        "ajax": "{% url 'store:contact-queries-list-data' %}",
+        "columns": [
+        
+          {"data": "id", "orderable": false},
+          {"data": "created", "orderable": true},
+          {"data": "customer__username", "orderable": true},
+          {"data": "email", "orderable": true},
+          {"data": "query", "orderable": false},
+          {"data": "answer", "orderable": false},
+          {"data": "actions", "orderable": false},
+        ],
+        "order": [
+          [1, 'asc']  // Default ordering by the second column (0-based index), which is "customer__username"
+        ],
+        dom: 'Bfrtip',
+        "buttons": [
+          { extend: 'copy', className: 'btn btn-info btn-sm mr-2' },
+          { extend: 'excel', className: 'btn btn-success btn-sm mr-2' },
+          { extend: 'pdf', className: 'btn btn-danger btn-sm' }
+        ],
+        
+        "paging": true,
+        "lengthChange": true,
+        "pageLength": 20,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "responsive": true,
+        "autoFill": true,
+        "colReorder": true
+      });
+    });
+
+    // Handle the click event of the query button
+    $('#contactQueriesTable').on('click', '.view-query', function() {
+      var rowId = $(this).data('row-id');
+      var queryData = $('#descriptionData-' + rowId).html();
+      
+      // Update the modal content
+      $('#queryModalContent').html(queryData);
+
+      // Show the modal
+      $('#queryModal').modal('show');
+    });
+
+    const editorConfig = {
+    toolbar: ["heading", "|", "bold", "italic", "link", "bulletedList", "numberedList", "blockQuote"],
+    language: { ui: "en", content: "en" }
+};
+
+// Define a variable to track CKEditor initialization
+var isCkEditorInitialized = false;
+
+
+// Handle the click event of the "Answer Query" button
+$('#contactQueriesTable').on('click', '.view-answer', function() {
+   var rowId = parseInt($(this).data('row-id'), 10);  // Convert rowId to an integer
+   var answer = $('#descriptionDataAnswer-' + rowId).html();
+  
+  // Initialize CKEditor only if it's not already initialized
+  if (!isCkEditorInitialized) {
+        ClassicEditor
+            .create(document.querySelector('#answerModalContent'), editorConfig)
+            .then(editor => {
+                // Set data/content to CKEditor
+                var newData = answer;
+                editor.setData(newData);
+
+                // Show the modal
+                $('#answerModal').modal('show');
+
+                // Update the CKEditor initialization status
+                isCkEditorInitialized = true;
+
+                // Handle the click event for the "Save" button
+                $('#answerModal').on('click', '#id_save_answer', function() {
+                    // Get the CKEditor data
+                    var ckeditorData = editor.getData();
+
+                    // Call your API with the CKEditor data, status 'save', and rowId using AJAX
+                    sendApiRequest('save', ckeditorData, rowId);
+                });
+
+                // Handle the click event for the "Send Now" button
+                $('#answerModal').on('click', '#id_send_answer', function() {
+                    // Get the CKEditor data
+                    var ckeditorData = editor.getData();
+
+                    // Call your API with the CKEditor data, status 'send_now', and rowId using AJAX
+                    sendApiRequest('send_now', ckeditorData, rowId);
+                });
+
+                // You can similarly handle other button click events (e.g., "Close")
+            })
+            .catch(error => {
+                console.error('CKEditor Error:', error);
+            });
+    } else {
+        // CKEditor is already initialized, just show the modal
+        $('#answerModal').modal('show');
+    }
+});
+
+function send_answer(rowId){
+  let ckeditorData = null
+// Call your API with the CKEditor data, status 'send_now', and rowId using AJAX
+sendApiRequest('send_now_noeditor', ckeditorData, rowId);
+  
+}
+
+// Function to send API requests
+function sendApiRequest(status, data, rowId) {
+    // Call your API with the CKEditor data, status, and rowId using AJAX
+    $.ajax({
+      
+        url: "{% url 'store:handle_contact_query_answer'  %}",
+        type: 'POST',
+        data: {
+        type: status,
+        content: data,
+        rowId: rowId,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+
+      },
+        success: function(response) {
+            // Handle success response
+            console.log(response);
+            // Handle success response
+            console.log(response);
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: response.message,  // Display the message from the server
+              showConfirmButton: false,
+              timer: 1500  // Automatically close after 1.5 seconds
+            });
+        },
+        error: function(error) {
+            // Handle error
+            console.error(error);
+            Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred',  // Display a generic error message
+            });
+        }
+    });
+}
+  
+  
+  </script>
+{% endblock javascripts %}
+

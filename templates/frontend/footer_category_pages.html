@@ -1,0 +1,3 @@
+{% for page in pages %}
+    <a href="{% url 'frontend:page' category=page.category slug=page.slug %}">{{ page.name }}</a>
+{% endfor %}

@@ -1,0 +1,25 @@
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <i class="material-icons">close</i>
+      </button>
+      <span>
+        <b>{{ message.tags|capfirst }} - </b>{{ message }}
+      </span>
+    </div>
+  {% endfor %}
+{% endif %}
+
+
+{% block javascripts %}
+<script>
+    $(document).ready(function() {
+      // Auto fade-out alert messages after 5 seconds
+      $(".alert").fadeTo(5000, 0).slideUp(500, function(){
+        $(this).remove();
+      });
+    });
+  </script>
+
+{% endblock javascripts %}

@@ -1,0 +1,81 @@
+{% extends "backend/layouts/base.html" %}
+{% load crispy_forms_tags %} {# Load crispy forms tags #}
+
+{% block title %} Cms Socials {% endblock %}
+
+{% block stylesheets %}
+<!-- Add any specific stylesheets for your CmsSocials form -->
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <div class="card h-100">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Cms Socials</h4>
+      </div>
+      <div class="card-body">
+        <h6 class="card-category">
+          {% include 'backend/includes/_messages.html' %}
+        </h6>
+        <br />
+        {% if success %}
+          <p class="text-success">Socials updated successfully!</p>
+        {% else %}
+          <!-- Edit Socials Form -->
+          <form role="form" method="post" action="{% url 'store:cms-socials' %}">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="bmd-label-floating">Facebook URL</label>
+                        {{ form.facebook_url |as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="bmd-label-floating">Instagram URL</label>
+                        {{ form.instagram_url |as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="bmd-label-floating">Twitter URL</label>
+                        {{ form.twitter_url |as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="bmd-label-floating">YouTube URL</label>
+                        {{ form.youtube_url |as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="bmd-label-floating">Pinterest URL</label>
+                        {{ form.pinterest_url |as_crispy_field }}
+                    </div>
+                </div>
+                <!-- Add similar blocks for additional social URLs -->
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary btn-block">Update Socials</button>
+                </div>
+            </div>
+        </form>
+        
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<!-- Add any specific scripts for your CmsSocials form -->
+{% endblock javascripts %}

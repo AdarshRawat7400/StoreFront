@@ -1,0 +1,223 @@
+    <div class="sidebar" data-color="purple" data-background-color="white" data-image="/static/backend/assets/img/sidebar-1.jpg">
+      <div class="logo">
+        <a target="_blank" rel="noopener noreferrer" 
+           href="#" class="simple-text logo-normal">
+          StoreFront
+        </a>
+      </div>
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+        {% if request.user.is_authenticated %}
+          {% if request.user.role == 'superadmin' or request.user.role == 'admin'  %}
+          <li class="nav-item {% if 'index' in segment %} active {% endif %}">
+            <a class="nav-link" href="/">
+              <i class="material-icons">dashboard</i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
+            <!-- <a class="nav-link" href="/page-user.html"> -->
+            <a class="nav-link" href="{% url 'admin:customers' %}">
+              <i class="material-icons">groups</i>
+              <p>Customers</p>
+            </a>
+          </li>
+          
+          {% endif %}
+          {% if request.user.role == 'superadmin'  %}
+
+          <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
+            <!-- <a class="nav-link" href="/page-user.html"> -->
+              <a class="nav-link" href="{% url 'admin:admins' %}">
+
+              
+              <i class="material-icons">people</i>
+              <p>Admins</p>
+            </a>
+          </li>
+          {% endif %}
+          <!-- Check if the user is a superadmin -->
+{% if request.user.role == 'admin' %}
+
+<!-- Store Management Section -->
+<li class="nav-item {% if 'store-management' in segment %} active {% endif %}">
+  <a class="nav-link" data-toggle="collapse" href="#storeManagement">
+    <i class="material-icons">store</i>
+    <p>Store Management <b class="caret"></b></p>
+  </a>
+  <div class="collapse" id="storeManagement">
+    <ul class="nav">
+      <!-- Categories Option -->
+      <li class="nav-item {% if 'categories' in segment %} active {% endif %}">
+        <a class="nav-link" href="{% url 'store:category-list' %}">
+          <i class="material-icons">category</i>
+          <p>Categories</p>
+        </a>
+      </li>
+
+      <!-- Products Option -->
+      <li class="nav-item {% if 'products' in segment %} active {% endif %}">
+        <a class="nav-link" href="{% url 'store:product-list' %}">
+          <i class="material-icons">shopping_basket</i>
+          <p>Products</p>
+        </a>
+      </li>
+
+      <!-- Orders Option -->
+      <li class="nav-item {% if 'orders' in segment %} active {% endif %}">
+        <a class="nav-link" href="{% url 'store:orders' %}">
+          <i class="material-icons">shopping_cart</i>
+          <p>Orders</p>
+        </a>
+      </li>
+
+      <!-- Settings Option -->
+      <li class="nav-item {% if 'settings' in segment %} active {% endif %}">
+        <a class="nav-link" href="">
+          <i class="material-icons">settings</i>
+          <p>Settings</p>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</li>
+
+ 
+
+<!-- Start: CMS Section -->
+<li class="nav-item {% if 'cms' in segment %} active {% endif %}">
+  <a class="nav-link" data-toggle="collapse" href="#cms">
+    <i class="material-icons">content_paste</i>
+    <p>CMS <b class="caret"></b></p>
+  </a>
+  <div class="collapse" id="cms">
+    <ul class="nav">
+      <!-- Slides Option -->
+      <li class="nav-item {% if 'slides' in segment %} active {% endif %}">
+        <a class="nav-link" href="{% url 'store:manage_slides' %}">
+          <i class="material-icons">slideshow</i>
+          <p>Slides</p>
+        </a>
+      </li>
+
+      <!-- Pages Option -->
+      <li class="nav-item {% if 'pages' in segment %} active {% endif %}">
+        <a class="nav-link" href="{% url 'store:page-list' %}">
+          <i class="material-icons">pageview</i>
+          <p>Pages</p>
+        </a>
+      </li>
+
+      <!-- Feedbacks Option -->
+      <li class="nav-item {% if 'feedbacks' in segment %} active {% endif %}">
+        <a class="nav-link" href="{% url 'store:feedback-list' %}">
+          <i class="material-icons">feedback</i>
+          <p>Feedbacks</p>
+        </a>
+      </li>
+
+      <!-- Contact Queries Option -->
+      <li class="nav-item {% if 'contact-queries' in segment %} active {% endif %}">
+        <a class="nav-link" href="{% url 'store:contact-queries-list' %}">
+          <i class="material-icons">question_answer</i>
+          <p>Contact Queries</p>
+        </a>
+      </li>
+      <!-- CMS Socials Option -->
+      <li class="nav-item {% if 'cms-socials' in segment %} active {% endif %}">
+        <a class="nav-link" href="{% url 'store:cms-socials' %}">
+          <i class="material-icons">share</i>
+          <p>Socials</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+</li>
+<!-- End: CMS Section -->
+
+{% endif %}
+
+          {% if request.user.role == 'customer'  %}
+
+          <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
+            <a class="nav-link" href="{% url 'admin:profile' %}">
+              <i class="material-icons">person</i>
+              <p>User Profile</p>
+            </a>
+          </li>
+          {% endif %}
+          <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}" hidden="true">
+            <a class="nav-link" href="/ui-tables.html">
+              <i class="material-icons">content_paste</i>
+              <p>Table List</p>
+            </a>
+          </li>
+          {% if request.user.role == 'superadmin' or request.user.role == 'admin'  %}
+
+          <li class="nav-item {% if 'ui-typography' in segment %} active {% endif %}" hidden="true">
+            <a class="nav-link" href="/ui-typography.html">
+              <i class="material-icons">library_books</i>
+              <p>Typography</p>
+            </a>
+          </li>
+          <li class="nav-item {% if 'ui-icons' in segment %} active {% endif %}" hidden="true">
+            <a class="nav-link" href="/ui-icons.html">
+              <i class="material-icons">bubble_chart</i>
+              <p>Icons</p>
+            </a>
+          </li>
+          <li class="nav-item {% if 'ui-maps' in segment %} active {% endif %}" hidden="true">
+            <a class="nav-link" href="/ui-maps.html">
+              <i class="material-icons">location_ons</i>
+              <p>Maps</p>
+            </a>
+          </li>
+          <li class="nav-item {% if 'ui-notifications' in segment %} active {% endif %}" hidden="true">
+            <a class="nav-link" href="/ui-notifications.html">
+              <i class="material-icons">notifications</i>
+              <p>Notifications</p>
+            </a>
+          </li>
+          
+          <li class="nav-item ">
+            <a class="nav-link" href="/page-rtl-support.html" hidden="true">
+              <i class="material-icons">language</i>
+              <p>RTL Support</p>
+            </a>
+          </li>
+
+          {% endif %}
+
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'admin:logout' %}" hidden="true">
+              <i class="material-icons">directions_run</i>
+              <p>Logout</p>
+            </a>
+          </li>
+
+          <!-- <li class="nav-item active-pro ">
+            <a class="nav-link" 
+               target="_blank" rel="noopener noreferrer"  
+               href="https://appseed.us/admin-dashboards/django-dashboard-material-pro">
+              <i class="material-icons">unarchive</i>
+              <p>PRO Version</p>
+            </a>
+          </li> -->
+
+        {% else %}
+
+          <!-- <li class="nav-item active">
+            <a class="nav-link" 
+               target="_blank" rel="noopener noreferrer"  
+               href="https://appseed.us/admin-dashboards/django-dashboard-material-pro">
+              <i class="material-icons">unarchive</i>
+              <p>PRO Version</p>
+            </a>
+          </li>           -->
+
+        {% endif %}
+        </ul>
+      </div>
+
+    </div>
