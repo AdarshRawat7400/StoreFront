@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from apps.store.forms import SlideForm
 from apps.core.auth_mixins import CheckRolesMixin
 from apps.users.models import Users
-from .models import BillingAddress, Category, CmsSocials, ContactQueries, Feedback, Order, Pages, Product, Slide, Tag
+from .models import BillingAddress, Category, CmsSocials, ContactQueries, Feedback, Order, Pages, Product, ProductImage, Slide, Tag
 from django.views.generic.edit import FormMixin
 from django.views.generic import DetailView
 from django import forms
@@ -102,7 +102,6 @@ class ManageSlidesView(CheckRolesMixin,TemplateView,View):
         form = self.form_class(request.POST, request.FILES)
         
         if form.is_valid():
-            form.cleaned_data['image'] = request.FILES.get('image')
             form.cleaned_data['slide_id'] = request.POST.get('slide_id')
             form.save()
             messages.success(request, 'Slide created successfully!')
@@ -228,7 +227,7 @@ class CategoryDataView(CheckRolesMixin, BaseDatatableView, TemplateView):
             if row.image:
                 # Render the image column with the base64-encoded image
                 image_data = row.image  # Assuming 'image' contains base64-encoded data
-                image_tag = f'<a href="data:image/png;base64,{escape(image_data)}" data-lightbox="category-images" data-title="{row.name}"><img src="data:image/png;base64,{escape(image_data)}" alt="{row.name}" style="width: 100px; height: 50px;"></a>'
+                image_tag = f'<a href="{row.image.url}" data-lightbox="category-images" data-title="{row.name}"><img src="{row.image.url}" alt="{row.name}" style="width: 100px; height: 50px;"></a>'
             else:
                 # Render a placeholder or alternative content when image is not available
                 image_tag = 'Image not available'
@@ -306,18 +305,16 @@ class ProductCreateView(CheckRolesMixin,TemplateView, FormMixin):
         return render(request, self.template_name, {'product_form': form})
 
     def post(self, request, *args, **kwargs):
-        form = self.get_form()
-
-
+        
+        form = ProductCreateForm(request.POST, request.FILES)
         if form.is_valid():
-            # Save the form and redirect on success
-            form.save()
+            instance = form.save()
             messages.success(request, 'Product created successfully!')
-            return redirect(self.success_url)
+            return JsonResponse({'success': True,'message': 'Product created successfully!', 'redirect_url': self.success_url})
 
-        # Render the form with validation errors
-        messages.error(request, 'Error creating product. Please check the form.')
-        return render(request, self.template_name, {'product_form': form})
+        # If there's an error, return JSON response with error messages
+        errors = {field: form.errors[field][0] for field in form.errors}
+        return JsonResponse({'success': False, 'errors': errors}, status=400)
 
 
 
@@ -353,14 +350,13 @@ class ProductUpdateView(CheckRolesMixin,TemplateView, FormMixin):
         product = Product.objects.filter(pk=pk).first()
         form = ProductUpdateForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
-            # Save the form and redirect on success
-            form.save()
+            instance = form.save()
             messages.success(request, 'Product updated successfully!')
-            return redirect(self.success_url)
+            return JsonResponse({'success': True,'message': 'Product updated successfully!', 'redirect_url': self.success_url})
 
-        # Render the form with validation errors
-        messages.error(request, 'Error updating product. Please check the form.')
-        return render(request, self.template_name, {'category_form': form, 'category': product})
+        # If there's an error, return JSON response with error messages
+        errors = {field: form.errors[field][0] for field in form.errors}
+        return JsonResponse({'success': False, 'errors': errors}, status=400)
 
 
 class ProductDataView(CheckRolesMixin,BaseDatatableView):
@@ -377,10 +373,11 @@ class ProductDataView(CheckRolesMixin,BaseDatatableView):
     def render_column(self, row, column):
         # Handle the 'actions' column separately
         if column == 'image':
-            if row.image:
+            if row.images.first():
+                image_url = row.images.first().image.url
                 # Render the image column with the base64-encoded image
                 image_data = row.image  # Assuming 'image' contains base64-encoded data
-                image_tag = f'<a href="data:image/png;base64,{escape(image_data)}" data-lightbox="category-images" data-title="{row.name}"><img src="data:image/png;base64,{escape(image_data)}" alt="{row.name}" style="width: 100px; height: 50px;"></a>'
+                image_tag = f'<a href="{image_url}" data-lightbox="category-images" data-title="{row.name}"><img src="{image_url}" alt="{row.name}" style="width: 100px; height: 50px;"></a>'
             else:
                 # Render a placeholder or alternative content when image is not available
                 image_tag = 'Image not available'
@@ -879,3 +876,21 @@ class CmsSocialsTemplateView(CheckRolesMixin,TemplateView):
             context = self.get_context_data(form=form)
             return self.render_to_response(context)
    
+
+class RemoveImageView(CheckRolesMixin,View):
+    allowed_roles = ('admin',)
+    
+    def post(self, request, *args, **kwargs):
+        image_id = request.POST.get('image_id')
+
+        try:
+            # Assuming ProductImage is your model
+            image = ProductImage.objects.filter(id=image_id).first()
+            if image:
+                image.delete()
+
+            return JsonResponse({'success': True, 'message': 'Image deleted successfully'})
+        except ProductImage.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Image not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)

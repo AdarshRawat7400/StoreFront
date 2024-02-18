@@ -27,7 +27,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login,logout
 
 from apps.users.models import Admin, Customer, Users
-from apps.core.utils import generate_random_password
+from apps.core.utils import convert_uploaded_file_to_webp, generate_random_password
 from apps.users.noconflict import makecls
 from .forms import AdminCreationForm, LoginForm, ProfileUpdateForm, SignUpForm
 from apps.users.auth import oauth
@@ -403,15 +403,12 @@ class UpdateProfilePic(CheckRolesMixin, View):
         try:
             customer = Users.objects.get(id=request.user.id)
             profile_pic = request.FILES.get("profile_picture")
-
             if profile_pic:
-                # Convert the file to base64 and store it in the Base64Field
-                base64_data = Base64Field().to_base64(profile_pic)
-                customer.profile_pic = base64_data
+                customer.profile = profile_pic
                 customer.save()
 
                 # messages.success(request, "Profile picture updated successfully.")
-                return JsonResponse({'success': True, 'base64_image': customer.profile_pic})
+                return JsonResponse({'success': True, 'profile': customer.profile.url})
             else:
                 return JsonResponse(
                     {"success": False, "errors": {"profile_picture": ["Please select a valid image."]}},

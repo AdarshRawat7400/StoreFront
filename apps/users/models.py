@@ -10,6 +10,10 @@ from django.contrib.auth.models import UserManager as BuiltInUserManager
 from django.contrib.auth.models import PermissionsMixin
 from apps.core.custom_model_fields import Base64Field
 from django_countries.fields import CountryField
+from django_resized import ResizedImageField
+from apps.core.storage import gd_storage
+
+
 
 
 USER_ROLES = [
@@ -86,7 +90,8 @@ class Users(AbstractBaseModel,AbstractBaseUser,PermissionsMixin):
     country = models.CharField(_("country"), max_length=255, null=True, blank=True,default='')
     postal_code = models.CharField(_("postal code"), max_length=255, null=True, blank=True)
     about_me = models.TextField(_("about me"), null=True, blank=True,default='')
-    profile_pic = Base64Field(null=True, blank=True)
+    profile = ResizedImageField(size=[400, 400],force_format="WEBP", quality=75, upload_to='bucket/profiles',null=True,blank=True)
+
     wishlist = models.ManyToManyField('store.Product', related_name='wishlist', blank=True)
     country_code = CountryField(blank_label='(select country)', null=True, blank=True)
 
@@ -100,7 +105,7 @@ class Users(AbstractBaseModel,AbstractBaseUser,PermissionsMixin):
     objects = UserManager()
 
     def save(self, *args, **kwargs):
-        if self.role == "user":
+        if self.role == "customer":
             self.is_admin = False
             self.is_superuser = False
 
@@ -113,7 +118,7 @@ class Users(AbstractBaseModel,AbstractBaseUser,PermissionsMixin):
     def set_system_id(self):
         if self.role == "admin":
             return "A"
-        elif self.role == "user":
+        elif self.role == "customer":
             return "C"
         return None
 

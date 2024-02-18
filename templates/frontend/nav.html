@@ -7,356 +7,797 @@
 		background-color: white;
 		color: black !important;
 	}
-	.topbar a:hover{
+
+	.topbar a:hover {
 		color: black;
 	}
+
+	.scrollable-tabs-container {
+		font-family: "Roboto", sans-serif;
+		background: #000;
+		max-width: 900px;
+		margin: 16px auto;
+		border-radius: 4px;
+		overflow: hidden;
+		position: relative;
+		margin-right: 20px;
+		z-index: 1000; /* Adjust the value as needed */
+
+	}
+
+	.scrollable-tabs-container svg {
+		width: 24px;
+		height: 24px;
+		padding: 8px;
+		cursor: pointer;
+		color: #fff;
+		border-radius: 50%;
+		pointer-events: auto;
+	}
+
+	.scrollable-tabs-container ul {
+		display: flex;
+		gap: 10px;
+		padding: 6px 12px;
+		margin: 0;
+		list-style: none;
+		overflow-x: scroll;
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+		scroll-behavior: smooth;
+		padding-right: 10px; /* Adjust this value to your preference */
+
+	}
+
+	.scrollable-tabs-container ul.dragging a {
+		pointer-events: none;
+	}
+
+	.scrollable-tabs-container ul.dragging {
+		scroll-behavior: auto;
+	}
+
+	.scrollable-tabs-container ul::-webkit-scrollbar {
+		display: none;
+	}
+
+	.scrollable-tabs-container a {
+		color: #fff;
+		text-decoration: none;
+		background: #333;
+		padding: 4px 24px;
+		display: inline-block;
+		border-radius: 4px;
+		user-select: none;
+		white-space: nowrap;
+	}
+
+	.scrollable-tabs-container a.active {
+		background: #fff;
+		color: #000;
+	}
+
+	.scrollable-tabs-container .right-arrow,
+	.scrollable-tabs-container .left-arrow {
+		position: absolute;
+		height: 100%;
+		width: 100px;
+		top: 0;
+		display: none;
+		align-items: center;
+		padding: 0 10px;
+		pointer-events: none;
+	}
+
+	.scrollable-tabs-container .right-arrow.active,
+	.scrollable-tabs-container .left-arrow.active {
+		display: flex;
+	}
+
+	.scrollable-tabs-container .right-arrow {
+		right: 0;
+		background: linear-gradient(to left, #000 50%, transparent);
+		justify-content: flex-end;
+	}
+
+	.scrollable-tabs-container .left-arrow {
+		background: linear-gradient(to right, #000 50%, transparent);
+	}
+
+	.scrollable-tabs-container svg:hover {
+		background: #333;
+	}
+
+	/* Custom styles for the navbar */
+.navbar {
+    background-color: #343a40; /* Dark background color */
+}
+
+.navbar-nav .nav-link {
+    color: #ffffff !important; /* Text color for nav links */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #e0e0e0 !important; /* Text color for nav links on hover */
+}
+
+.dropdown-menu {
+    background-color: #343a40; /* Dark background color for dropdown menu */
+}
+
+.dropdown-item {
+    color: #ffffff !important; /* Text color for dropdown items */
+}
+
+.dropdown-item:hover {
+    background-color: #555b62; /* Background color for dropdown items on hover */
+}
+
+.badge-dark {
+    background-color: #007bff; /* Badge color */
+    color: #ffffff; /* Text color for the badge */
+}
+
+/* Add some spacing to the dropdown menu items */
+.dropdown-item {
+    margin: 5px 0;
+}
+
+/* Add a little padding to the badge */
+.badge {
+    padding: 0.3em 0.6em;
+}
+
+/* Adjust the dropdown arrow color */
+.navbar-dark .navbar-toggler-icon {
+    background-color: #ffffff;
+}
+
+/* Adjust the hover background color for the active item */
+.navbar-nav .nav-item.active:hover {
+    background-color: transparent;
+}
+
+/* Custom styles for the rounded corners */
+.navbar {
+    border-radius: 10px;
+}
+
+.dropdown-menu {
+    border-radius: 8px;
+}
+/* Custom styles for Select2 */
+.select2-container {
+    width: 100% !important; /* Adjust the width as needed */
+    border-radius: 8px !important; /* Make corners rounder */
+    position: relative;
+}
+
+.select2-selection {
+    height: 38px !important; /* Adjust the height as needed */
+    border: 1px solid #ced4da !important; /* Border color */
+    border-radius: 8px !important; /* Make corners rounder */
+}
+
+.select2-selection__arrow {
+    height: 38px !important; /* Match the height of the selection */
+}
+
+/* Optional: Style the dropdown list */
+.select2-results__option {
+    padding: 8px 12px !important; /* Adjust padding as needed */
+    border-radius: 4px !important; /* Make corners rounder for the options */
+}
+
+/* Optional: Style the selected option */
+.select2-selection__rendered {
+    padding: 8px 12px !important; /* Adjust padding as needed */
+    color: #495057 !important; /* Text color */
+}
+
+/* Optional: Style the placeholder */
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #6c757d !important; /* Placeholder text color */
+}
+
+/* Dropdown to appear on the side when focused */
+.select2-container:focus + .select2-container--default .select2-dropdown {
+    left: 100% !important;
+    margin-top: -1px; /* Adjust if needed to align with the input */
+    border-radius: 8px !important; /* Make corners rounder for the dropdown */
+}
+
+/* Hide the dropdown when not focused */
+.select2-container:not(:focus) + .select2-container--default .select2-dropdown {
+    display: none !important;
+}
+
+/* Adjust styles based on your design */
+.product-name {
+    font-weight: bold;  /* Example: make product name bold */
+}
+
+.category-name {
+    font-size: 9px;  /* Example: make category name smaller */
+    color: #236bdf;  /* Example: set category name color to blue */
+}
+
+/* Custom styling for the clear button */
+.select2-selection__clear {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 16px;
+    color: #495057;
+    background-color: #e9ecef; /* Background color */
+    border-radius: 100%; /* Make it round */
+    padding: 4px; /* Add some padding for spacing */
+    transition: background-color 0.3s; /* Add transition effect */
+}
+
+/* Change background color on hover for a highlight effect */
+.select2-selection__clear:hover {
+    background-color: #ced4da;
+}
+
+
+
 </style>
 <!-- Header -->
 <header class="header1">
-		<!-- Header desktop -->
-		<div class="container-menu-header">
-			<div class="topbar">
-				<div class="topbar-social">
-					<a href="#" class="topbar-social-item fab fa-facebook"></a>
-					<a href="#" class="topbar-social-item fab fa-instagram"></a>
-					<a href="#" class="topbar-social-item fab fa-pinterest-p"></a>
-					<a href="#" class="topbar-social-item fab fa-twitter"></a>
-					<a href="#" class="topbar-social-item fab fa-youtube"></a>
-				</div>
+	<!-- Header desktop -->
+	
+	
+	<div class="container-menu-header">
+		
+		<div class="topbar">
+			
+			
+			<div class="topbar-social col-2">
+				<a href="#" class="topbar-social-item fab fa-facebook"></a>
+				<a href="#" class="topbar-social-item fab fa-instagram"></a>
+				<a href="#" class="topbar-social-item fab fa-pinterest-p"></a>
+				<a href="#" class="topbar-social-item fab fa-twitter"></a>
+				<a href="#" class="topbar-social-item fab fa-youtube"></a>
+			</div>
 
-				<span class="topbar-child1" hidden="true">
-					Free shipping for standard order over ₹100
+			<!-- Replace the existing content with Bootstrap search bar -->
+			<div class="input-group col-8">
+				<select class="form-select" id="single-select-clear-field-desktop" data-placeholder="Search Product, Brands, More...">
+				</select>
+			</div>
+
+			<div class="topbar-child2 col-2">
+				<span class="topbar-email">
+					<a href="https://github.com/adarshrawat7400">
+						adarshrawat71@gmail.com
+					</a>
 				</span>
 
-				<div class="topbar-child2">
-					<span class="topbar-email">
-						<a href="https://github.com/adarshrawat7400">
-						adarshrawat71@gmail.com
-					    </a>
-					</span>
-
-					<div class="topbar-language rs1-select2"  hidden="true">
-						<select class="selection-1" name="time">
-							<option>USD</option>
-							<option>EUR</option>
-						</select>
-					</div>
+				<div class="topbar-language rs1-select2" hidden="true">
+					<select class="selection-1" name="time">
+						<option>USD</option>
+						<option>EUR</option>
+					</select>
 				</div>
 			</div>
+		</div>
+		
 
-			<div class="wrap_header">
-				<!-- Logo -->
-				<!-- <a href="/" class="logo">
+		<div class="wrap_header">
+			<!-- Logo -->
+			<!-- <a href="/" class="logo">
 					<p style="color: black; "><b style="font-size: 22px;">A</b>VADH STORE</p>
 				</a> -->
-				<a href="/" class="logo">
-					<img src="{% static 'frontend/images/icons/logo_png.png' %}" style="max-height: 65px;" alt="IMG-LOGO">
-				</a>
-
-				<!-- Menu -->
-				<div class="wrap_menu">
-					<nav class="menu">
-						<ul class="main_menu">
-							<li>
-								<a href="/">Home</a>
-
-							</li>
-
-							<li>
-								<a href="/shop/">Shop</a>
-							</li>
-
-							{% categories %}
-
-							{% if request.user.is_authenticated %}
-							<li>
-								<a href="{% url 'frontend:order-summary' %}">Cart<span class="badge badge-dark">{{ request.user|cart_item_count }}</span></a>
-							</li>
-							<li>
-								<a href="{% url 'account_logout' %}">Logout</a>
-							</li>
-							{% else %}
-							<li>
-								<a href="#">Login</a>
-								<ul class="sub_menu">
-									<li><a href="{% url 'account_login' %}">Login</a></li>
-									<li><a href="{% url 'account_signup' %}">SignUp</a></li>
-								</ul>
-							</li>
-							{% endif %}
-						</ul>
-					</nav>
-				</div>
-				{% if request.user.is_authenticated %}
-				<!-- Header Icon -->
-				<div class="header-icons">
-					<!-- <a href="#" class="header-wrapicon1 dis-block">
-						<img src="{% static 'frontend/images/icons/icon-header-01.png' %}" class="header-icon1" alt="ICON">
-					</a> -->
-					<li class="nav-item dropdown">
-						<a class="nav-link" href="#pablo" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<img src="{% static 'frontend/images/icons/icon-header-01.png' %}" class="header-icon1" alt="ICON">
-
-						</a>
-						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-						  <a class="dropdown-item" href="{% url 'frontend:profile' %}">Profile</a>
-						  <div class="dropdown-divider"></div>
-						  <a class="dropdown-item" href="{% url 'frontend:logout' %}" >Log out</a>
-						</div>
-					  </li>
-
-					<span class="linedivide1"></span>
-
-					<div class="header-wrapicon2">
-						<img src="{% static 'frontend/images/icons/icon-header-02.png' %}" class="header-icon1 js-show-header-dropdown" alt="ICON">
-						<span class="header-icons-noti">0</span>
-
-						<!-- Header cart noti -->
-						<div class="header-cart header-dropdown">
-							<ul class="header-cart-wrapitem">
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'frontend/images/item-cart-01.jpg' %}" alt="IMG">
-									</div>
-
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											White Shirt With Pleat Detail Back
-										</a>
-
-										<span class="header-cart-item-info">
-											1 x ₹19.00
-										</span>
-									</div>
-								</li>
-
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'frontend/images/item-cart-02.jpg' %}" alt="IMG">
-									</div>
-
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											Converse All Star Hi Black Canvas
-										</a>
-
-										<span class="header-cart-item-info">
-											1 x ₹39.00
-										</span>
-									</div>
-								</li>
-
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'frontend/images/item-cart-03.jpg' %}" alt="IMG">
-									</div>
-
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											Nixon Porter Leather Watch In Tan
-										</a>
-
-										<span class="header-cart-item-info">
-											1 x ₹17.00
-										</span>
-									</div>
-								</li>
-							</ul>
-
-							<div class="header-cart-total">
-								Total: ₹75.00
-							</div>
-
-							<div class="header-cart-buttons">
-								<div class="header-cart-wrapbtn">
-									<!-- Button -->
-									<a href="cart.html" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
-										View Cart
-									</a>
-								</div>
-
-								<div class="header-cart-wrapbtn">
-									<!-- Button -->
-									<a href="#" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
-										Check Out
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				{% endif %}
-			</div>
-		</div>
-
-		<!-- Header Mobile -->
-		<div class="wrap_header_mobile">
-			<!-- Logo moblie -->
-			<a href="index.html" class="logo-mobile" >
+			<a href="/" class="logo">
 				<img src="{% static 'frontend/images/icons/logo_png.png' %}" style="max-height: 65px;" alt="IMG-LOGO">
 			</a>
+			<div class="scrollable-tabs-container">
+				<div class="left-arrow">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+						stroke="currentColor" class="w-6 h-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+					</svg>
+				</div>
+			
+				<ul>
+					{% categories %}
+				</ul>
+			
+				<div class="right-arrow active">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+						stroke="currentColor" class="w-6 h-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+					</svg>
+				</div>
+			</div>
+			
+			<nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded" style="margin-right:20px; padding: 2px 2px;">	
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+						
+						{% if request.user.is_authenticated %}
+						<li class="nav-item active">
+							<a class="nav-link" href="{% url 'frontend:profile' %}">Profile</a>
+						</li>
+						<li class="nav-item active">
+							<a class="nav-link" href="{% url 'frontend:order-summary' %}">Cart<span
+									class="badge badge-dark">{{ request.user|cart_item_count }}</span></a>
+						</li>
+						
+						<li class="nav-item active">
+							<a class="nav-link" href="{% url 'frontend:logout' %}">Logout</a>
+						</li>
+						{% else %}
+						
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+								aria-haspopup="true" aria-expanded="false">
+								Login
+							</a>
+							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<a class="dropdown-item"  href="{% url 'frontend:auth0-login' %}">Login</a>
+								<a class="dropdown-item" href="{% url 'frontend:auth0-login' %}">Signup</a>
+								
+							</div>
+						</li>
+						
+						{% endif %}
+						<li class="nav-item active">
+							<a class="nav-link" href="{% url 'frontend:home' %}">Home</a>
+						</li>
+					</ul>
+			
+					
+				</div>
+			</nav>
+			
+			
 
-			<!-- Button show menu -->
-			<div class="btn-show-menu">
-				<!-- Header Icon mobile -->
-				<div class="header-icons-mobile">
-					<a href="#" class="header-wrapicon1 dis-block">
-						<img src="{% static 'frontend/images/icons/icon-header-01.png' %}" class="header-icon1" alt="ICON">
-					</a>
+		</div>
+		
+	</div>
 
-					<span class="linedivide2"></span>
+	<!-- Header Mobile -->
+	<div class="wrap_header_mobile">
+		<!-- Logo moblie -->
+		<a href="index.html" class="logo-mobile">
+			<img src="{% static 'frontend/images/icons/logo_png.png' %}" style="max-height: 65px;" alt="IMG-LOGO">
+		</a>
 
-					<div class="header-wrapicon2">
-						<img src="{% static 'frontend/images/icons/icon-header-02.png' %}" class="header-icon1 js-show-header-dropdown" alt="ICON">
-						<span class="header-icons-noti">0</span>
+		<!-- Button show menu -->
+		<div class="btn-show-menu">
+			<!-- Header Icon mobile -->
+			<div class="header-icons-mobile">
 
-						<!-- Header cart noti -->
-						<div class="header-cart header-dropdown">
-							<ul class="header-cart-wrapitem">
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'frontend/images/item-cart-01.jpg' %}" alt="IMG">
-									</div>
 
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											White Shirt With Pleat Detail Back
-										</a>
+				{% if request.user.is_authenticated %}
+				<div class="header-wrapicon2">
+					<img src="{% static 'frontend/images/icons/icon-header-02.png' %}"
+						class="header-icon1 js-show-header-dropdown" alt="ICON">
+					<span class="header-icons-noti">0</span>
 
-										<span class="header-cart-item-info">
-											1 x ₹19.00
-										</span>
-									</div>
-								</li>
+					<!-- Header cart noti -->
+					<div class="header-cart header-dropdown">
+						<ul class="header-cart-wrapitem">
+							<li class="header-cart-item">
+								<div class="header-cart-item-img">
+									<img src="{% static 'frontend/images/item-cart-01.jpg' %}" alt="IMG">
+								</div>
 
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'frontend/images/item-cart-02.jpg' %}" alt="IMG">
-									</div>
+								<div class="header-cart-item-txt">
+									<a href="#" class="header-cart-item-name">
+										White Shirt With Pleat Detail Back
+									</a>
 
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											Converse All Star Hi Black Canvas
-										</a>
+									<span class="header-cart-item-info">
+										1 x ₹19.00
+									</span>
+								</div>
+							</li>
 
-										<span class="header-cart-item-info">
-											1 x ₹39.00
-										</span>
-									</div>
-								</li>
+							<li class="header-cart-item">
+								<div class="header-cart-item-img">
+									<img src="{% static 'frontend/images/item-cart-02.jpg' %}" alt="IMG">
+								</div>
 
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'frontend/images/item-cart-03.jpg' %}" alt="IMG">
-									</div>
+								<div class="header-cart-item-txt">
+									<a href="#" class="header-cart-item-name">
+										Converse All Star Hi Black Canvas
+									</a>
 
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											Nixon Porter Leather Watch In Tan
-										</a>
+									<span class="header-cart-item-info">
+										1 x ₹39.00
+									</span>
+								</div>
+							</li>
 
-										<span class="header-cart-item-info">
-											1 x ₹17.00
-										</span>
-									</div>
-								</li>
-							</ul>
+							<li class="header-cart-item">
+								<div class="header-cart-item-img">
+									<img src="{% static 'frontend/images/item-cart-03.jpg' %}" alt="IMG">
+								</div>
 
-							<div class="header-cart-total">
-								Total: ₹75.00
+								<div class="header-cart-item-txt">
+									<a href="#" class="header-cart-item-name">
+										Nixon Porter Leather Watch In Tan
+									</a>
+
+									<span class="header-cart-item-info">
+										1 x ₹17.00
+									</span>
+								</div>
+							</li>
+						</ul>
+
+						<div class="header-cart-total">
+							Total: ₹75.00
+						</div>
+
+						<div class="header-cart-buttons">
+							<div class="header-cart-wrapbtn">
+								<!-- Button -->
+								<a href="cart.html" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
+									View Cart
+								</a>
 							</div>
 
-							<div class="header-cart-buttons">
-								<div class="header-cart-wrapbtn">
-									<!-- Button -->
-									<a href="cart.html" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
-										View Cart
-									</a>
-								</div>
-
-								<div class="header-cart-wrapbtn">
-									<!-- Button -->
-									<a href="#" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
-										Check Out
-									</a>
-								</div>
+							<div class="header-cart-wrapbtn">
+								<!-- Button -->
+								<a href="#" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
+									Check Out
+								</a>
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<div class="btn-show-menu-mobile hamburger hamburger--squeeze">
-					<span class="hamburger-box">
-						<span class="hamburger-inner"></span>
-					</span>
-				</div>
+				<span class="linedivide2"></span>
+				<a href="#" class="header-wrapicon1 dis-block">
+					<img src="{% static 'frontend/images/icons/icon-header-01.png' %}" class="header-icon1" alt="ICON">
+				</a>
+				{% endif %}
+			</div>
+
+
+			<div class="btn-show-menu-mobile hamburger hamburger--squeeze">
+				<span class="hamburger-box">
+					<span class="hamburger-inner"></span>
+				</span>
 			</div>
 		</div>
 
-		<!-- Menu Mobile -->
-		<div class="wrap-side-menu" >
-			<nav class="side-menu">
-				<ul class="main-menu">
-					<li class="item-topbar-mobile p-l-20 p-t-8 p-b-8">
-						<span class="topbar-child1" hidden="true">
-							Free shipping for standard order over ₹100
-						</span>
-					</li>
-
-					<li class="item-topbar-mobile p-l-20 p-t-8 p-b-8" hidden="true">
-						<div class="topbar-child2-mobile">
-							<span class="topbar-email">
-								fashe@example.com
-							</span>
-
-							<div class="topbar-language rs1-select2"  hidden="true">
-								<select class="selection-1" name="time">
-									<option>USD</option>
-									<option>EUR</option>
-								</select>
-							</div>
-						</div>
-					</li>
-
-					<li class="item-topbar-mobile p-l-10">
-						<div class="topbar-social-mobile">
-							<a href="#" class="topbar-social-item fa fa-facebook"></a>
-							<a href="#" class="topbar-social-item fa fa-instagram"></a>
-							<a href="#" class="topbar-social-item fa fa-pinterest-p"></a>
-							<a href="#" class="topbar-social-item fa fa-snapchat-ghost"></a>
-							<a href="#" class="topbar-social-item fa fa-youtube-play"></a>
-						</div>
-					</li>
-
-					<li class="item-menu-mobile">
-						<a href="/">Home</a>
-					</li>
-
-					<li class="item-menu-mobile">
-						<a href="/shop">Shop</a>
-					</li>
-
-					{% categories_mobile %}
-
-					{% if request.user.is_authenticated %}
-					<li class="item-menu-mobile">
-						<a href="{% url 'frontend:order-summary' %}">Cart<span class="badge badge-dark">{{ request.user|cart_item_count }}</span></a>
-					</li>
-					<li class="item-menu-mobile">
-						<a href="{% url 'account_logout' %}">Logout</a>
-					</li>
-					{% else %}
-					<li class="item-menu-mobile">
-						<a href="#">Login</a>
-						<ul class="sub-menu">
-							<li><a href="{% url 'account_login' %}">Login</a></li>
-							<li><a href="{% url 'account_signup' %}">SignUp</a></li>
-						</ul>
-						<i class="arrow-main-menu fa fa-angle-right" aria-hidden="true"></i>
-					</li>
-					{% endif %}
-
-				</ul>
-			</nav>
+		 <!-- Bootstrap search bar for mobile -->
+		 <div class="input-group col-12" style="padding-left:0px;">
+			<select class="form-select" id="single-select-clear-field-mobile" data-placeholder="Search Product, Brands, More...">
+			</select>
 		</div>
-	</header>
+	</div>
+
+	<!-- Menu Mobile -->
+	<div class="wrap-side-menu">
+		<nav class="side-menu">
+			<ul class="main-menu">
+				<li class="item-topbar-mobile p-l-20 p-t-8 p-b-8">
+					<span class="topbar-child1" hidden="true">
+						Free shipping for standard order over ₹100
+					</span>
+				</li>
+
+				<li class="item-topbar-mobile p-l-20 p-t-8 p-b-8" hidden="true">
+					<div class="topbar-child2-mobile">
+						<span class="topbar-email">
+							fashe@example.com
+						</span>
+
+						<div class="topbar-language rs1-select2" hidden="true">
+							<select class="selection-1" name="time">
+								<option>USD</option>
+								<option>EUR</option>
+							</select>
+						</div>
+					</div>
+				</li>
+
+				<li class="item-topbar-mobile p-l-10">
+					<div class="topbar-social-mobile">
+						<a href="#" class="topbar-social-item fa fa-facebook"></a>
+						<a href="#" class="topbar-social-item fa fa-instagram"></a>
+						<a href="#" class="topbar-social-item fa fa-pinterest-p"></a>
+						<a href="#" class="topbar-social-item fa fa-snapchat-ghost"></a>
+						<a href="#" class="topbar-social-item fa fa-youtube-play"></a>
+					</div>
+				</li>
+
+				<li class="item-menu-mobile">
+					<a href="/">Home</a>
+				</li>
+
+				<li class="item-menu-mobile">
+					<a href="/shop">Shop</a>
+				</li>
+
+				{% categories_mobile %}
+
+				{% if request.user.is_authenticated %}
+				<li class="item-menu-mobile">
+					<a href="{% url 'frontend:profile' %}">Profile</a>
+				</li>
+				
+				<li class="item-menu-mobile">
+					<a href="{% url 'frontend:order-summary' %}">Cart<span class="badge badge-dark">
+					
+						{{request.user|cart_item_count }}</span></a>
+				</li>
+				<li class="item-menu-mobile">
+					<a href="{% url 'frontend:logout' %}">Logout</a>
+				</li>
+				{% else %}
+				<li class="item-menu-mobile">
+					<a href="#">Login</a>
+					<ul class="sub-menu">
+						<li><a href="{% url 'frontend:auth0-login' %}">Login</a></li>
+						<li><a href="{% url 'frontend:auth0-login' %}">SignUp</a></li>
+					</ul>
+					<i class="arrow-main-menu fa fa-angle-right" aria-hidden="true"></i>
+				</li>
+				{% endif %}
+
+			</ul>
+		</nav>
+	</div>
+</header>
+
+
+
+{% block extra_scripts %}
+
+<!-- Scripts -->
+<script src="/static/backend/assets/js/core/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+
+<script>
+	const tabs = document.querySelectorAll(".scrollable-tabs-container a");
+	const rightArrow = document.querySelector(
+		".scrollable-tabs-container .right-arrow svg"
+	);
+	const leftArrow = document.querySelector(
+		".scrollable-tabs-container .left-arrow svg"
+	);
+	const tabsList = document.querySelector(".scrollable-tabs-container ul");
+	const leftArrowContainer = document.querySelector(
+		".scrollable-tabs-container .left-arrow"
+	);
+	const rightArrowContainer = document.querySelector(
+		".scrollable-tabs-container .right-arrow"
+	);
+
+	const removeAllActiveClasses = () => {
+		tabs.forEach((tab) => {
+			tab.classList.remove("active");
+		});
+	};
+
+	tabs.forEach((tab) => {
+		tab.addEventListener("click", () => {
+			removeAllActiveClasses();
+			tab.classList.add("active");
+		});
+	});
+
+	const manageIcons = () => {
+		if (tabsList.scrollLeft >= 20) {
+			leftArrowContainer.classList.add("active");
+		} else {
+			leftArrowContainer.classList.remove("active");
+		}
+
+		let maxScrollValue = tabsList.scrollWidth - tabsList.clientWidth - 20;
+		console.log("scroll width: ", tabsList.scrollWidth);
+		console.log("client width: ", tabsList.clientWidth);
+
+		if (tabsList.scrollLeft >= maxScrollValue) {
+			rightArrowContainer.classList.remove("active");
+		} else {
+			rightArrowContainer.classList.add("active");
+		}
+	};
+
+	rightArrow.addEventListener("click", () => {
+		tabsList.scrollLeft += 200;
+		manageIcons();
+	});
+
+	leftArrow.addEventListener("click", () => {
+		tabsList.scrollLeft -= 200;
+		manageIcons();
+	});
+
+	tabsList.addEventListener("scroll", manageIcons);
+
+	let dragging = false;
+
+	const drag = (e) => {
+		if (!dragging) return;
+		tabsList.classList.add("dragging");
+		tabsList.scrollLeft -= e.movementX;
+	};
+
+	tabsList.addEventListener("mousedown", () => {
+		dragging = true;
+	});
+
+	tabsList.addEventListener("mousemove", drag);
+
+	document.addEventListener("mouseup", () => {
+		dragging = false;
+		tabsList.classList.remove("dragging");
+	});
+
+
+	document.addEventListener('DOMContentLoaded', function () {
+		// Check if category_slug is present in the context
+		var categorySlug = "{{ category_slug }}";
+
+		if (categorySlug) {
+			// If category_slug is present, make that option active
+			var selectedCategory = document.getElementById(categorySlug);
+			if (selectedCategory) {
+				selectedCategory.classList.add("active");
+			}
+		} else {
+			// If category_slug is not present, make "All Shop" active by default
+			var allShop = document.getElementById("allShop");
+			if (allShop) {
+				allShop.classList.add("active");
+			}
+		}
+	});
+
+
+	$(document).ready(function() {
+
+    $('#single-select-clear-field-desktop').select2({
+        theme: "bootstrap-5",
+        width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+        placeholder: $(this).data('placeholder'),
+        allowClear: true,
+		minimumInputLength: 3, // Adjust this value based on your requirement
+        ajax: {
+            url: "{% url 'frontend:search-product' %}", // Replace with your actual API endpoint
+            dataType: 'json',
+            type: "POST",
+            delay: 250, // Adjust delay as needed to prevent excessive requests
+            cache: false,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            },
+            processResults: function (data) {
+                return {
+                    results: data.map(function (item) {
+                        return {
+                            id: item.value,
+                            product_name: item.product_name,
+							category_name:item.category_name,
+							url : item.url,
+							text: ""
+                        };
+                    })
+                };
+            },
+			
+            parameters: {
+                search: function () {
+                    return {
+                        term: $('#single-select-clear-field-desktop').val()
+                    };
+                }
+            }
+        },
+		templateResult: function (data) {
+        if (!data.id) {
+            // return if there is no data
+            return data.text;
+        }
+
+       var $option = $(
+            `<div class="product-item">
+                <span class="product-name">${data.product_name}</span>
+				
+                <small class="category-name">in ${data.category_name}</small>
+            </div>`
+        );
+		// Add click event to handle redirection
+		
+        return $option;
+    },
+    });
+
+	$("#single-select-clear-field-desktop").on('select2:select', function(e){
+   if( e.params.data.url )
+        window.location = e.params.data.url;
+});
+
+
+$("#single-select-clear-field-mobile").on('select2:select', function(e){
+   if( e.params.data.url )
+        window.location = e.params.data.url;
+});
+
+	
+    $('#single-select-clear-field-mobile').select2({
+        theme: "bootstrap-5",
+        width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+        placeholder: $(this).data('placeholder'),
+        allowClear: true,
+		minimumInputLength: 3, // Adjust this value based on your requirement
+        ajax: {
+            url: "{% url 'frontend:search-product' %}", // Replace with your actual API endpoint
+            dataType: 'json',
+            type: "POST",
+            delay: 250, // Adjust delay as needed to prevent excessive requests
+            cache: false,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            },
+            processResults: function (data) {
+                return {
+                    results: data.map(function (item) {
+                        return {
+                            id: item.value,
+                            product_name: item.product_name,
+							category_name:item.category_name,
+							url : item.url,
+							text: ""
+                        };
+                    })
+                };
+            },
+            parameters: {
+                search: function () {
+                    return {
+                        term: $('#single-select-clear-field-mobile').val()
+                    };
+                }
+            }
+        },
+		templateResult: function (data) {
+        if (!data.id) {
+            // return if there is no data
+            return data.text;
+        }
+
+       var $option = $(
+            `<div class="product-item">
+                <span class="product-name">${data.product_name}</span>
+				
+                <small class="category-name">in ${data.category_name}</small>
+            </div>`
+        );
+		// Add click event to handle redirection
+		
+        return $option;
+    },
+    });
+
+});
+
+
+
+
+
+
+$(window).on('scroll', function () {
+    // Close the dropdown on scroll
+    $('#single-select-clear-field-desktop').select2('close');
+	$('#single-select-clear-field-mobile').select2('close');
+
+
+});
+// Handle scroll event
+
+
+</script>
+
+{% endblock extra_scripts %}

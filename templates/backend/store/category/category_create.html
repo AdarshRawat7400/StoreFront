@@ -167,11 +167,9 @@
 <script>
   
   $(document).ready(function() {
-    $('#id_tags').select2();
-
+    console.log("IM HERE")
       // Handle change event on file input
-      $('#{{ product_form.image.id_for_label }}').change(function() {
-        console.log("IM HERE")
+      $('#{{ category_form.image.id_for_label }}').change(function() {
           var fileInput = this;
           var selectedImagePreview = $('#selected-image-preview');
           var selectedImage = $('#selected-image');
@@ -192,7 +190,9 @@
               selectedImagePreview.hide();
           }
       });
-  });
+ 
+ 
+    });
 
 
 </script>

@@ -67,6 +67,7 @@ class LoginForm(forms.Form):
 
             }
         ))
+    
 
 
 

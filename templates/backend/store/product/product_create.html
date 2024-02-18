@@ -5,54 +5,57 @@
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
-  <style>
-    /* This selector targets the editable element (excluding comments). */
-    .ck-editor__editable_inline:not(.ck-comment__input *) {
-      height: 300px;
-      overflow-y: auto;
-    }
+<style>
+  /* This selector targets the editable element (excluding comments). */
+  .ck-editor__editable_inline:not(.ck-comment__input *) {
+    height: 300px;
+    overflow-y: auto;
+  }
 
-    /* Basic styling for the file input container */
-    .custom-file {
-      position: relative;
-      display: inline-block;
-      cursor: pointer;
-    }
+  /* Basic styling for the file input container */
+  .custom-file {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
 
-    /* Styling for the input */
-    .custom-file input {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      cursor: pointer;
-    }
+  /* Styling for the input */
+  .custom-file input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
 
-    /* Styling for the button */
-    .custom-file-label {
-      background-color: #2c3e50; /* Matte black background color */
-      color: #ecf0f1; /* Light text color */
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      display: inline-block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      cursor: pointer;
-    }
+  /* Styling for the button */
+  .custom-file-label {
+    background-color: #2c3e50;
+    /* Matte black background color */
+    color: #ecf0f1;
+    /* Light text color */
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+  }
 
-    /* Hover effect for the button */
-    .custom-file:hover .custom-file-label {
-      background-color: #34495e; /* Slightly darker matte black on hover */
-    }
+  /* Hover effect for the button */
+  .custom-file:hover .custom-file-label {
+    background-color: #34495e;
+    /* Slightly darker matte black on hover */
+  }
 
-    /* styles.css */
+  /* styles.css */
 
-/* Custom form control */
-.custom-form-control {
+  /* Custom form control */
+  .custom-form-control {
     width: 100%;
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
@@ -63,17 +66,54 @@
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
+  }
 
-/* Custom form-check-input */
-.custom-form-check-input {
+  /* Custom form-check-input */
+  .custom-form-check-input {
     position: static;
     margin-top: 0.3rem;
     margin-right: 0.25rem;
     margin-left: -1.25rem;
-}
+  }
 
-  </style>
+  /* Custom styling for the remove file link */
+  #MultiFileUpload .dz-remove {
+    color: #fff;
+    background-color: #e74c3c;
+    cursor: pointer;
+    border: none;
+    padding: 5px 8px;
+    /* Adjusted padding for a smaller button */
+    font-size: 12px;
+    /* Adjusted font size for a smaller button */
+    border-radius: 10px;
+    transition: background-color 0.3s ease-in-out;
+    margin-top: 14px;
+    /* Added margin-top for padding from the top */
+  }
+
+  /* Hover effect for the remove file link */
+  #MultiFileUpload .dz-remove:hover {
+    background-color: #c0392b;
+  }
+
+  /* Hide the file name in Dropzone previews */
+  #MultiFileUpload .dz-preview .dz-details {
+    display: none;
+  }
+
+  /* Ensure that the remove button is always visible */
+  #MultiFileUpload .dz-preview:hover .dz-remove {
+    opacity: 1;
+  }
+
+
+  /* Hide upload progress bar in Dropzone */
+  .dropzone .dz-progress,
+  .dropzone .dz-upload {
+    display: none;
+  }
+</style>
 {% endblock stylesheets %}
 
 {% block content %}
@@ -93,173 +133,165 @@
         <br />
 
         {% if success %}
-          <p class="text-success">Product created successfully!</p>
+        <p class="text-success">Product created successfully!</p>
         {% else %}
-          <!-- Create Product Form -->
-          <form role="form" method="post" action="{% url 'store:product-create' %}" enctype="multipart/form-data">
+        <!-- Create Product Form -->
+        <form role="form" method="post" id="create-product-form" action="{% url 'store:product-create' %}"
+          enctype="multipart/form-data">
 
-            {% csrf_token %}
+          {% csrf_token %}
 
-            <div class="row">
-              <div class="col-md-5">
-                <div class="form-group">
-                  <label class="bmd-label-floating">Product Name</label>
-                  {{ product_form.name|as_crispy_field }}
-            <!-- <span class="text-danger">{{ product_form.name.errors }}</span> -->
-                </div>
-              </div>
-
-              <div class="col-md-5">
-                <div class="form-group">
-                  <label class="bmd-label-floating">Short Description</label>
-                  {{ product_form.description_short|as_crispy_field }}
-                  <!-- <span class="text-danger">{{ product_form.description_short.errors }}</span> -->
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group">
-                    <label class="bmd-label-floating">Label</label>
-                    {{ product_form.label }}
-                    <span class="text-danger">{{ product_form.label.errors }}</span>
-                </div>
-            </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12">
-                <label class="bmd-label-floating">Long Description</label>
-
-                <div class="form-group">
-                  {{ product_form.description_long|as_crispy_field }}
-                  <!-- <span class="text-danger">{{ product_form.description_long.errors }}</span> -->
-                </div>
-              </div>
-
-             
-            </div>
-
-            <div class="row">
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label class="bmd-label-floating">Brand</label>
-                    {{ product_form.brand|as_crispy_field }}
-                    <!-- <span class="text-danger">{{ product_form.brand.errors }}</span> -->
-                  </div>
-                </div>
-  
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label class="bmd-label-floating">Manufacturer</label>
-                    {{ product_form.manufacturer|as_crispy_field }}
-                    <!-- <span class="text-danger">{{ product_form.manufacturer.errors }}</span> -->
-                  </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="bmd-label-floating">Is Featured</label>
-                        <div class="switch purple-switch">
-                            <input type="checkbox" name="{{ product_form.is_featured.name }}" id="{{ product_form.is_featured.id_for_label }}" {{ product_form.is_featured.value|yesno:"checked," }}>
-                            <label class="slider round" for="{{ product_form.is_featured.id_for_label }}"></label>
-                        </div>
-                        <!-- <span class="text-danger">{{ product_form.is_featured.errors }}</span> -->
-                    </div>
-                </div>
-                
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="bmd-label-floating">Is Active</label>
-                        <div class="switch purple-switch">
-                            <input type="checkbox" name="{{ product_form.is_active.name }}" id="{{ product_form.is_active.id_for_label }}" {{ product_form.is_active.value|yesno:"checked," }}>
-                            <label class="slider round" for="{{ product_form.is_active.id_for_label }}"></label>
-                        </div>
-                        <!-- <span class="text-danger">{{ product_form.is_active.errors }}</span> -->
-                    </div>
-                </div>
-                
-
-
-              </div>
-            
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                      <label class="bmd-label-floating">Price (INR)</label>
-                      {{ product_form.price|as_crispy_field }}
-                      <!-- <span class="text-danger">{{ product_form.price.errors }}</span> -->
-                    </div>
-                  </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="bmd-label-floating">Discounted Price (INR)</label>
-                  {{ product_form.discounted_price|as_crispy_field }}
-                  <!-- <span class="text-danger">{{ product_form.discounted_price.errors }}</span> -->
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="bmd-label-floating">Stock Quantity</label>
-                  {{ product_form.stock_quantity|as_crispy_field }}
-                  <!-- <span class="text-danger">{{ product_form.stock_quantity.errors }}</span> -->
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="bmd-label-floating">SKU (unique)</label>
-                  {{ product_form.sku|as_crispy_field }}
-                  <!-- <span class="text-danger">{{ product_form.sku.errors }}</span> -->
-                </div>
+          <div class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <label class="bmd-label-floating">Product Name</label>
+                {{ product_form.name|as_crispy_field }}
+                <!-- <span class="text-danger">{{ product_form.name.errors }}</span> -->
               </div>
             </div>
 
-            <div class="row">
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="bmd-label-floating">Category</label>
-                  {{ product_form.category|as_crispy_field }}
-                  <!-- <span class="text-danger">{{ product_form.category.errors }}</span> -->
-                </div>
+            <div class="col-md-5">
+              <div class="form-group">
+                <label class="bmd-label-floating">Short Description</label>
+                {{ product_form.description_short|as_crispy_field }}
+                <!-- <span class="text-danger">{{ product_form.description_short.errors }}</span> -->
               </div>
-
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="bmd-label-floating">Tags</label>
-                  {{ product_form.tags|as_crispy_field }}
-                  <!-- <span class="text-danger">{{ product_form.tags.errors }}</span> -->
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="bmd-label-floating">Image</label>
-                  <div class="custom-file">
-                    {{ product_form.image|as_crispy_field }}
-                    <label class="custom-file-label" for="{{ product_form.image.id_for_label }}">Choose file</label>
-                  </div>
-                  <span class="text-danger">{{ product_form.image.errors }}</span>
-                </div>
-              </div>
-              <div class="col-md-2 mb-10">
-                <div class="form-group" style="display: none;" id="selected-image-preview">
-                    <a href="" data-lightbox="selected-image" data-title="Selected Image">
-                        <img id="selected-image" src="" alt="Selected Image" class="img-fluid" style="width: 70px; height: 70px;">
-                    </a>
-                </div>
             </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label class="bmd-label-floating">Label</label>
+                {{ product_form.label }}
+                <span class="text-danger">{{ product_form.label.errors }}</span>
+              </div>
+            </div>
+          </div>
 
-              
+          <div class="row">
+            <div class="col-md-12">
+              <label class="bmd-label-floating">Long Description</label>
+
+              <div class="form-group">
+                {{ product_form.description_long|as_crispy_field }}
+                <!-- <span class="text-danger">{{ product_form.description_long.errors }}</span> -->
+              </div>
             </div>
 
 
-            <div class="row mt-4">
-              <div class="col-md-12">
-                <button type="submit" class="btn btn-primary btn-block">Create Product</button>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="bmd-label-floating">Brand</label>
+                {{ product_form.brand|as_crispy_field }}
+                <!-- <span class="text-danger">{{ product_form.brand.errors }}</span> -->
               </div>
             </div>
 
-          </form>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="bmd-label-floating">Manufacturer</label>
+                {{ product_form.manufacturer|as_crispy_field }}
+                <!-- <span class="text-danger">{{ product_form.manufacturer.errors }}</span> -->
+              </div>
+            </div>
 
-         
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="bmd-label-floating">Is Featured</label>
+                <div class="switch purple-switch">
+                  <input type="checkbox" name="{{ product_form.is_featured.name }}"
+                    id="{{ product_form.is_featured.id_for_label }}" {{ product_form.is_featured.value|yesno:"checked,"
+                    }}>
+                  <label class="slider round" for="{{ product_form.is_featured.id_for_label }}"></label>
+                </div>
+                <!-- <span class="text-danger">{{ product_form.is_featured.errors }}</span> -->
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="bmd-label-floating">Is Active</label>
+                <div class="switch purple-switch">
+                  <input type="checkbox" name="{{ product_form.is_active.name }}"
+                    id="{{ product_form.is_active.id_for_label }}" {{ product_form.is_active.value|yesno:"checked," }}>
+                  <label class="slider round" for="{{ product_form.is_active.id_for_label }}"></label>
+                </div>
+                <!-- <span class="text-danger">{{ product_form.is_active.errors }}</span> -->
+              </div>
+            </div>
+
+
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="bmd-label-floating">Price (INR)</label>
+                {{ product_form.price|as_crispy_field }}
+                <!-- <span class="text-danger">{{ product_form.price.errors }}</span> -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="bmd-label-floating">Discounted Price (INR)</label>
+                {{ product_form.discounted_price|as_crispy_field }}
+                <!-- <span class="text-danger">{{ product_form.discounted_price.errors }}</span> -->
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="bmd-label-floating">Stock Quantity</label>
+                {{ product_form.stock_quantity|as_crispy_field }}
+                <!-- <span class="text-danger">{{ product_form.stock_quantity.errors }}</span> -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="bmd-label-floating">SKU (unique)</label>
+                {{ product_form.sku|as_crispy_field }}
+                <!-- <span class="text-danger">{{ product_form.sku.errors }}</span> -->
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="bmd-label-floating">Category</label>
+                {{ product_form.category|as_crispy_field }}
+                <!-- <span class="text-danger">{{ product_form.category.errors }}</span> -->
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="bmd-label-floating">Tags</label>
+                {{ product_form.tags|as_crispy_field }}
+                <!-- <span class="text-danger">{{ product_form.tags.errors }}</span> -->
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="row mt-2 pl-3 pr-3">
+            <div class="dropzone clsbox col-md-12" id="MultiFileUpload">
+              <input hidden='true' id="file" name="file" type="file" multiple="multiple" />
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <button type="submit" class="btn btn-primary btn-block">Create Product</button>
+            </div>
+          </div>
+
+        </form>
+
+
         {% endif %}
 
       </div>
@@ -274,38 +306,119 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
+<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-     $(document).ready(function() {
+  $(document).ready(function () {
     // Initialize Select2 for the tags field
     $('#id_tags').select2();
     $('#id_category').select2();
 
   });
-  $(document).ready(function() {
-    // Handle change event on file input
-    $('#{{ product_form.image.id_for_label }}').change(function() {
-      var fileInput = this;
-      var selectedImagePreview = $('#selected-image-preview');
-      var selectedImage = $('#selected-image');
 
-      if (fileInput.files && fileInput.files[0]) {
-        var reader = new FileReader();
 
-        reader.onload = function(e) {
-          // Show the selected image preview
-          selectedImage.attr('src', e.target.result);
-          selectedImage.parent().attr('href', e.target.result);  // Update Lightbox href
-          selectedImagePreview.show();
-        };
 
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        // Hide the selected image preview if no file selected
-        selectedImagePreview.hide();
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = jQuery.trim(cookies[i]);
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
       }
-    });
+    }
+    return cookieValue;
+  }
+  var csrftoken = getCookie('csrftoken');
+  Dropzone.autoDiscover = false;
+
+  $('#MultiFileUpload').dropzone({
+    url: "{% url 'store:product-create' %}",
+    dictDefaultMessage: "Drop files here or click to upload (Max:3, Min:1) for Product", // Customize the default message
+    crossDomain: false,
+    addRemoveLinks: true, // Ensure this option is set to true
+    autoProcessQueue: false, // Set to true to process files automatically
+    minFiles: 1, // Set the minimum number of files required
+    maxFiles: 3, // Set the maximum number of files allowed
+
+    init: function () {
+
+      var _this = this;
+
+
+      // Attach an event listener to the form submission
+      $('#create-product-form').submit(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var queuedFiles = _this.getQueuedFiles();
+
+        if (queuedFiles.length > 0) {
+          // Append files to FormData before submitting the form
+          var formData = new FormData($('#create-product-form')[0]);
+          queuedFiles.forEach(function (file) {
+            formData.append('file', file);
+          });
+
+          // Submit the form with the appended files
+          $.ajax({
+            type: 'POST',
+            url: "{% url 'store:product-create' %}",
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+              'X-CSRFToken': csrftoken,
+            },
+            success: function (response) {
+
+              if (response.success) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success',
+                  text: response.message,
+                  showConfirmButton: true, // Set to true to show the "OK" button
+
+                }).then(() => {
+                  // Redirect to products page after user clicks "OK"
+                  window.location.href = "{% url 'store:product-list' %}";
+                });
+              } else {
+                // Handle other success scenarios if needed
+                console.log(response);
+              }
+            },
+            error: function (response) {
+              // Handle error using SweetAlert2
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: response.responseJSON.errors.name || 'Something went wrong. Please try again.'
+              });
+              console.error(response);
+            }
+
+          });
+        } else {
+          console.log("No files to submit.");
+          // Handle the case where there are no files to submit
+        }
+      });
+
+      this.on("error", function (file, message) {
+
+        console.log(message);
+        this.removeFile(file);
+      });
+
+    }
   });
+
 </script>
 {% endblock javascripts %}

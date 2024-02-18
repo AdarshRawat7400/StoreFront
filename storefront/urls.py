@@ -26,7 +26,7 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path("admin/", include("apps.users.urls", namespace='admin')),  # Adjust the app name if needed
     path("store/", include("apps.store.urls", namespace='store')),  # Adjust the app name if needed
-    path('accounts/', include('allauth.urls')),
+    # path('accounts/', include('allauth.urls')),
     path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
 
     path('', include('apps.frontend.urls', namespace='frontend')),

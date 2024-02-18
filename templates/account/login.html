@@ -8,59 +8,64 @@
 
 {% block content %}
 
+{% block stylesheets %}
+
 <style type="text/css">
-  input {
+    input {
+        border: 1px solid #ced4da !important;
+    }
 
-    border: 1px solid #ced4da !important;
+    .social-auth-button-container {
+        text-align: center;
+        margin-top: 20px;
+    }
 
-}
+    .social-auth-button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .social-auth-button:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
 </style>
-
+{% endblock stylesheets %}
 
 <div class="container">
-  <div class="row">
+    <div class="row">
+        <div class="col-md-6 mt-5 offset-md-3">
 
-    <div class="col-md-6 mt-5 offset-3">
-      <h1>{% trans "Sign In" %}</h1>
+            <h1>{% trans "Sign In" %}</h1>
+        </br>
+            
+            <a href="{% url 'frontend:auth0-login' %}" class="btn btn-primary btn-sm" onclick="openDetachedPopup(event)">
+                <i class="fas fa-users mr-2"></i> Social Auth
+            </a></br>
+            Or 
 
-{% get_providers as socialaccount_providers %}
+            <form class="login" method="POST" action="">
+                {% csrf_token %}
+                {{ form|crispy }}
 
-{% if socialaccount_providers %}
-<p>{% blocktrans with site.name as site_name %}Please sign in with one
-of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
 
-<div class="socialaccount_ballot">
+                <div class="social-auth-button-container">
+                    <a class="btn btn-outline-dark" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+                    <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+                </div>
+            </form>
 
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
-
-  <div class="login-or">{% trans 'or' %}</div>
-
-</div>
-
-{% include "socialaccount/snippets/login_extra.html" %}
-
-{% else %}
-<p>{% blocktrans %}If you have not created an account yet, then please
-<a href="{{ signup_url }}" class="text-primary">sign up</a> first.{% endblocktrans %}</p>
-{% endif %}
-
-<form class="login" method="POST" action="{% url 'account_login' %}">
-  {% csrf_token %}
-  {{ form|crispy }}
-  {% if redirect_field_value %}
-
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-  {% endif %}
-  <a class="btn btn-outline-dark" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-  <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
-</form>
-
+        </div>
     </div>
-  </div>
 </div>
-
 
 {% endblock %}

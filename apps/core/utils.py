@@ -4,6 +4,7 @@ import string
 import io
 import base64
 from PIL import Image
+from django.core.files.base import ContentFile
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -86,4 +87,37 @@ def resize_image(image, desired_width, desired_height):
 
     except Exception as e:
         print(f"Error resizing image: {e}")
+        return None
+    
+
+
+from PIL import Image
+from django.core.files.uploadedfile import TemporaryUploadedFile
+
+def convert_uploaded_file_to_webp(uploaded_file, output_name, resolution=(800, 600)):
+    """
+    Convert an uploaded file to WebP format with the specified resolution.
+
+    Parameters:
+    - uploaded_file (TemporaryUploadedFile): The uploaded file object.
+    - output_name (str): The desired name for the output WebP image file.
+    - resolution (tuple): Desired resolution (width, height). Default is (800, 600).
+
+    Returns:
+    - Image: The processed Image object.
+    """
+    try:
+        # Open the uploaded file using Pillow
+        with Image.open(uploaded_file) as img:
+            # Resize the image to the specified resolution
+            resized_img = img.resize(resolution, Image.ANTIALIAS)
+
+            # Convert the Image object to bytes
+            image_bytes = resized_img.tobytes()
+            # Save the bytes to a ContentFile
+            content_file = ContentFile(image_bytes)
+            return content_file
+
+    except Exception as e:
+        print(f'Error converting image: {str(e)}')
         return None

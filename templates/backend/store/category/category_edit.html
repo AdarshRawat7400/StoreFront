@@ -111,14 +111,14 @@
               <div class="col-md-2 mb-10">
                 <div class="form-group" id="selected-image-preview">
                   {% if category_form.image.value %}
-                    {% with image_data=category_form.image.value %}
-                      <a href="data:image/png;base64,{{ image_data|escape }}" data-lightbox="category-images" data-title="{{ row.name }}">
-                        <img id="selected-image" src="data:image/png;base64,{{ image_data|escape }}" alt="{{ row.name }}" style="width: 70px; height: 70px;">
+                    {% with image_data=category_form.image.value.url %}
+                      <a href="{{image_data}}" data-lightbox="category-images" data-title="{{ row.name }}">
+                        <img id="selected-image" src="{{image_data}}" alt="{{ row.name }}" style="width: 70px; height: 70px;">
                       </a>
                     {% endwith %}
                   {% else %}
                     <img id="selected-image" src="" alt="Selected Image" class="img-fluid" style="width: 70px; height: 70px; display: none;">
-                  {% endif %}
+                {% endif %}
                 </div>
               </div>
               

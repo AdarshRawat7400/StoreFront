@@ -72,6 +72,43 @@
       margin-right: 0.25rem;
       margin-left: -1.25rem;
     }
+     /* Custom styling for the remove file link */
+  #MultiFileUpload .dz-remove {
+    color: #fff;
+    background-color: #e74c3c;
+    cursor: pointer;
+    border: none;
+    padding: 5px 8px;
+    /* Adjusted padding for a smaller button */
+    font-size: 12px;
+    /* Adjusted font size for a smaller button */
+    border-radius: 10px;
+    transition: background-color 0.3s ease-in-out;
+    margin-top: 14px;
+    /* Added margin-top for padding from the top */
+  }
+
+  /* Hover effect for the remove file link */
+  #MultiFileUpload .dz-remove:hover {
+    background-color: #c0392b;
+  }
+
+  /* Hide the file name in Dropzone previews */
+  #MultiFileUpload .dz-preview .dz-details {
+    display: none;
+  }
+
+  /* Ensure that the remove button is always visible */
+  #MultiFileUpload .dz-preview:hover .dz-remove {
+    opacity: 1;
+  }
+
+
+  /* Hide upload progress bar in Dropzone */
+  .dropzone .dz-progress,
+  .dropzone .dz-upload {
+    display: none;
+  }
   </style>
 {% endblock stylesheets %}
 
@@ -94,8 +131,9 @@
         {% if success %}
           <p class="text-success">Product created successfully!</p>
         {% else %}
+        
           <!-- Create Product Form -->
-          <form role="form" method="post" action="{% url 'store:product-edit' pk=product.id %}" enctype="multipart/form-data">
+          <form role="form" method="post"  id='edit-product-form' action="{% url 'store:product-edit' pk=product.id %}" enctype="multipart/form-data">
 
             {% csrf_token %}
 
@@ -202,45 +240,30 @@
             </div>
 
             <div class="row">
-              <div class="col-md-3">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="bmd-label-floating">Category</label>
                   {{ product_form.category|as_crispy_field }}
                 </div>
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="bmd-label-floating">Tags</label>
                   {{ product_form.tags|as_crispy_field }}
                 </div>
               </div>
               
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="bmd-label-floating">Image</label>
-                  <div class="custom-file">
-                    {{ product_form.image|as_crispy_field }}
-                    <label class="custom-file-label" for="{{ product_form.image.id_for_label }}">Choose file</label>
-                  </div>
-                  <span class="text-danger">{{ product_form.image.errors }}</span>
-                </div>
-              </div>
+              
 
-              <div class="col-md-2 mb-10">
-                <div class="form-group" id="selected-image-preview">
-                    {% if product_form.image.value %}
-                        {% with image_data=product_form.image.value %}
-                            <a href="data:image/png;base64,{{ image_data|escape }}" data-lightbox="product-images" data-title="{{ product_form.name.value }}">
-                                <img id="selected-image" src="data:image/png;base64,{{ image_data|escape }}" alt="{{ product_form.name.value }}" style="width: 70px; height: 70px;">
-                            </a>
-                        {% endwith %}
-                    {% else %}
-                        <img id="selected-image" src="" alt="Selected Image" class="img-fluid" style="width: 70px; height: 70px; display: none;">
-                    {% endif %}
-                </div>
-            </div>
+              
             
+            </div>
+
+            <div class="row mt-2 pl-3 pr-3">
+              <div class="dropzone clsbox col-md-12" id="MultiFileUpload">
+                <input hidden='true' id="file" name="file" type="file" multiple="multiple" />
+              </div>
             </div>
 
             <div class="row mt-4">
@@ -262,41 +285,217 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
+<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+ 
+
   $(document).ready(function() {
     // Initialize Select2 for the tags and category fields
     $('#id_tags').select2();
     $('#id_category').select2();
   });
 
-  $(document).ready(function() {
-    // Handle change event on file input
-    $('#{{ product_form.image.id_for_label }}').change(function() {
-      var fileInput = this;
-      var selectedImagePreview = $('#selected-image-preview');
-      var selectedImage = $('#selected-image');
+  // $(document).ready(function() {
+  //   // Handle change event on file input
+  //   $('#{{ product_form.image.id_for_label }}').change(function() {
+  //     var fileInput = this;
+  //     var selectedImagePreview = $('#selected-image-preview');
+  //     var selectedImage = $('#selected-image');
 
-      if (fileInput.files && fileInput.files[0]) {
-        var reader = new FileReader();
+  //     if (fileInput.files && fileInput.files[0]) {
+  //       var reader = new FileReader();
 
-        reader.onload = function(e) {
-          // Show the selected image preview
-          selectedImage.attr('src', e.target.result);
-          selectedImage.parent().attr('href', e.target.result);  // Update Lightbox href
-          selectedImagePreview.show();
-        };
+  //       reader.onload = function(e) {
+  //         // Show the selected image preview
+  //         selectedImage.attr('src', e.target.result);
+  //         selectedImage.parent().attr('href', e.target.result);  // Update Lightbox href
+  //         selectedImagePreview.show();
+  //       };
 
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        // Hide the selected image preview if no file selected
-        selectedImagePreview.hide();
+  //       reader.readAsDataURL(fileInput.files[0]);
+  //     } else {
+  //       // Hide the selected image preview if no file selected
+  //       selectedImagePreview.hide();
+  //     }
+  //   });
+  // });
+
+  
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = jQuery.trim(cookies[i]);
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
       }
+    }
+    return cookieValue;
+  }
+  var csrftoken = getCookie('csrftoken');
+  Dropzone.autoDiscover = false;
+
+  $('#MultiFileUpload').dropzone({
+    url: "{% url 'store:product-edit' pk=product.id %}",
+    dictDefaultMessage: "Drop files here or click to upload (Max:3, Min:1) for Product", // Customize the default message
+    crossDomain: false,
+    addRemoveLinks: true, // Ensure this option is set to true
+    autoProcessQueue: false, // Set to true to process files automatically
+    minFiles: 1, // Set the minimum number of files required
+    maxFiles: 3, // Set the maximum number of files allowed
+
+    init: function () {
+
+      var _this = this;
+
+
+      {% for image in product.images.all %}
+    console.log("Image ID:", {{ image.id }});
+
+    // Create a mockFile for each preloaded image
+    var mockFile = {
+        name: '{{image.id}}',
+        size: 0,
+        dataURL: '{{ image.image.url }}'
+    };
+
+    // Emit Dropzone events for the preloaded image
+    _this.emit('addedfile', mockFile);
+    _this.emit('thumbnail', mockFile, '{{ image.image.url }}');
+    _this.files.push(mockFile);
+
+    // Manually set the accepted property of the preloaded files
+    mockFile.accepted = true;
+
+    // Ensure that the remove button is always visible
+    _this.emit('complete', mockFile);
+
+
+{% endfor %}
+
+    // Set the maxFiles property to the current number of accepted files
+    _this.options.maxFiles = _this.options.maxFiles || 3;
+    console.log("_this.options.maxFiles ",_this.options.maxFiles)
+
+    this.on("maxfilesexceeded", function (file) {
+        // Disable further file adding when the max limit is reached
+        _this.options.maxFiles = _this.getAcceptedFiles().length;
     });
+    this.on("addedfile", function (file) {
+      console.log("_this.getAcceptedFiles().length",_this.getAcceptedFiles().length)
+      console.log('_this.options.maxFiles ',_this.options.maxFiles)
+        // Check if the total number of files is more than the maximum allowed
+        if (_this.getAcceptedFiles().length > _this.options.maxFiles) {
+            _this.removeFile(file);
+        }
+    });
+
+    _this.on('removedfile', function(file) {
+    // file.name contains the image ID
+    var imageId = file.name;
+    console.log("IMAGE ID",!isNaN(imageId))
+    // Check if imageId is a valid number
+    if (!isNaN(imageId)) {
+        // Perform an AJAX request to delete the image with the given ID
+        $.ajax({
+            url: '{% url "store:remove-image" %}',
+            type: 'POST',
+            data: {
+                image_id: imageId,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            },
+            success: function(response) {
+                console.log('Image deleted successfully:', imageId);
+            },
+            error: function(error) {
+                console.error('Error deleting image:', error);
+            }
+        });
+    } else {
+        console.warn('Invalid image ID:', imageId);
+    }
+});
+
+
+      // Attach an event listener to the form submission
+      $('#edit-product-form').submit(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var queuedFiles = _this.getQueuedFiles();
+
+          // Append files to FormData before submitting the form
+          var formData = new FormData($('#edit-product-form')[0]);
+          queuedFiles.forEach(function (file) {
+            formData.append('file', file);
+          });
+
+          // Submit the form with the appended files
+          $.ajax({
+            type: 'POST',
+            url: "{% url 'store:product-edit' pk=product.id %}",
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+              'X-CSRFToken': csrftoken,
+            },
+            success: function (response) {
+
+              if (response.success) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success',
+                  text: response.message,
+                  showConfirmButton: true, // Set to true to show the "OK" button
+
+                }).then(() => {
+                  // Redirect to products page after user clicks "OK"
+                  window.location.href = "{% url 'store:product-list' %}";
+                });
+              } else {
+                // Handle other success scenarios if needed
+                console.log(response);
+              }
+            },
+            error: function (response) {
+              // Handle error using SweetAlert2
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: response.responseJSON.errors.name || 'Something went wrong. Please try again.'
+              });
+              console.error(response);
+            }
+
+          });
+        
+      });
+
+      this.on("error", function (file, message) {
+
+        console.log(message);
+        this.removeFile(file);
+      });
+
+    }
   });
+
+
+
 </script>
 
 {% endblock javascripts %}

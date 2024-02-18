@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CategoryCreateView, CategoryDataView, CategoryTemplateView, CategoryUpdateView, CmsSocialsTemplateView, ContactQueriesDataView, ContactQueriesTemplateView, FeedbackDataView, FeedbackTemplateView, HandleContactQueryAnswerView, OrdersDataView, OrdersTemplateView, PageCreateView, PageDataView, PageTemplateView, PageUpdateView, ProductCreateView, ProductDataView, ProductListView, ProductDetailView,ManageSlidesView, ProductTemplateView, ProductUpdateView
+from .views import CategoryCreateView, CategoryDataView, CategoryTemplateView, CategoryUpdateView, CmsSocialsTemplateView, ContactQueriesDataView, ContactQueriesTemplateView, FeedbackDataView, FeedbackTemplateView, HandleContactQueryAnswerView, OrdersDataView, OrdersTemplateView, PageCreateView, PageDataView, PageTemplateView, PageUpdateView, ProductCreateView, ProductDataView, ProductListView, ProductDetailView,ManageSlidesView, ProductTemplateView, ProductUpdateView, RemoveImageView
 
 app_name = 'store'
 
@@ -25,10 +25,10 @@ urlpatterns = [
     path('contact-queries-data/', ContactQueriesDataView.as_view(), name='contact-queries-list-data'),
     path('handle-contact-query-answer/', HandleContactQueryAnswerView.as_view(), name='handle_contact_query_answer'),
     path('cms-socials/', CmsSocialsTemplateView.as_view(), name='cms-socials'),
+    path('remove-image/', RemoveImageView.as_view(), name='remove-image'),
+    # path('products/', ProductListView.as_view(), name='product_list'),
+    # path('<slug:category_slug>/', ProductListView.as_view(), name='product_list_by_category'),
+    # path('<int:id>/<slug:slug>/', ProductDetailView.as_view(), name='product_detail'),
 
-
-    path('', ProductListView.as_view(), name='product_list'),
-    path('<slug:category_slug>/', ProductListView.as_view(), name='product_list_by_category'),
-    path('<int:id>/<slug:slug>/', ProductDetailView.as_view(), name='product_detail'),
 
 ]

@@ -47,6 +47,7 @@
                     </thead>
                     <tbody>
                         {% for slide in slides %}
+
                         <tr id="slide-row-{{ slide.id }}" data-caption1="{{ slide.caption1 }}" data-caption2="{{ slide.caption2 }}" data-link="{{ slide.link }}">
                           <td>{{ slide.id }}</td>
                             <td>{{ slide.caption1 }}</td>
@@ -56,8 +57,8 @@
                           </td>
                                                     
                            <td>
-                            <a href="data:image/png;base64,{{ slide.image }}" data-lightbox="slide{{ slide.id }}">
-                              <img src="data:image/png;base64,{{ slide.image }}" alt="{{ slide.caption1 }}" style="width: 100px; height: 50px;">
+                            <a href="{{slide.image.url}}" data-lightbox="slide{{ slide.id }}">
+                              <img src="{{ slide.image.url}}" alt="{{ slide.caption1 }}" style="width: 100px; height: 50px;">
                           </a>
                             
                           </td>
@@ -65,6 +66,7 @@
                           <td>
                             {% if slide.is_active %}
                                 <!-- Show green icon for active slide -->
+                                <h1></h1>
                                 <i class="material-icons text-success">check_circle</i>
                             {% else %}
                                 <!-- Show red icon for inactive slide -->

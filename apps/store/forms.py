@@ -5,6 +5,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from apps.core.custom_model_fields import Base64Field
 from apps.core.utils import resize_image
+from apps.store.utils import save_product_file
 from .models import LABEL_CHOICES, PAGES_CATEGORY, CmsSocials, ContactQueries, Pages, Slide
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -21,9 +22,10 @@ from django_select2.forms import Select2MultipleWidget
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
-from django.utils.text import slugify
 from .models import Category
-from .models import Product, Category, Tag
+from .models import Product, Category, Tag,ProductImage
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils.text import slugify
 
 
 
@@ -31,9 +33,6 @@ class SlideForm(forms.ModelForm):
     class Meta:
         model = Slide
         fields = ['caption1', 'caption2', 'link', 'image']
-        widgets = {
-            'image': forms.FileInput(attrs={'accept': 'image/*','class':"form-control"})
-        }
     
 
     def __init__(self, *args, **kwargs):
@@ -62,33 +61,22 @@ class SlideForm(forms.ModelForm):
 
         return link
 
-    # def clean_image(self):
-    #     image = self.cleaned_data['image']
-
-    #     base64_data = Base64Field().to_base64(image)
-
-    #     return base64_data
 
     def save(self, commit=True):
         
         instance = super(SlideForm, self).save(commit=False)
         slide_id = self.cleaned_data.get('slide_id')
-
-        if self.cleaned_data['image']:
-            image = self.cleaned_data['image']
-            image = resize_image(image,1920,570)
-            # Convert the file to base64 and store it in the Base64Field
-            instance.image = image
-        
-        # If slide_id is provided, set the instance id for updating
         if slide_id:
             self.cleaned_data.pop('slide_id')
-            self.cleaned_data['image'] = instance.image
-            Slide.objects.filter(pk=slide_id).update(**self.cleaned_data)
+            instance = Slide.objects.get(id=slide_id)
+            instance.caption1 = self.cleaned_data['caption1']
+            instance.caption2 = self.cleaned_data['caption2']
+            instance.link = self.cleaned_data['link']
+            instance.image = self.cleaned_data['image']
+            instance.save()
 
         if not slide_id and commit:
             instance.save()
-
 
         return instance
     
@@ -157,11 +145,11 @@ class CategoryCreateForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.slug = slugify(self.cleaned_data['name'])
-        if self.cleaned_data['image']:
-            image = self.cleaned_data['image']
-            image = resize_image(image,1920,570)
-            # Convert the file to base64 and store it in the Base64Field
-            instance.image = image
+        # if self.cleaned_data['image']:
+        #     image = self.cleaned_data['image']
+        #     image = resize_image(image,1920,570)
+        #     # Convert the file to base64 and store it in the Base64Field
+        #     instance.image = image
 
         if commit:
             instance.save()
@@ -225,12 +213,15 @@ class CategoryEditForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.slug = slugify(self.cleaned_data['name'])
-        if  self.cleaned_data['image'] and type(self.cleaned_data['image']) not in [str,None]:
-            image = self.cleaned_data['image']
-            image = resize_image(image,1920,570)
-            # Convert the file to base64 and store it in the Base64Field
-            instance.image = image
+        # if  self.cleaned_data['image'] and type(self.cleaned_data['image']) not in [str,None]:
+        #     image = self.cleaned_data['image']
+        #     image = resize_image(image,1920,570)
+        #     # Convert the file to base64 and store it in the Base64Field
+        #     instance.image = image
         
+        if self.cleaned_data['image']:
+            instance.image = self.cleaned_data['image']
+            
         if commit:
             instance.save()
 
@@ -264,6 +255,14 @@ class ProductCreateForm(forms.ModelForm):
     )
     label = forms.ChoiceField(choices=LABEL_CHOICES, widget=forms.Select(attrs={'class': 'custom-form-control'}), required=True)
 
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        slug = slugify(name)
+        # Check if a product with the same slugified name already exists
+        if Product.objects.filter(slug=slug).exists():
+            raise forms.ValidationError("A product with this name already exists.")
+        return name
+
 
     def clean_sku(self):
         sku = self.cleaned_data['sku']
@@ -294,17 +293,23 @@ class ProductCreateForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.label = ''
 
+
     def save(self, commit=True):
+
         instance = super().save(commit=False)
         instance.slug = slugify(self.cleaned_data['name'])
-        if  self.cleaned_data['image'] and type(self.cleaned_data['image']) not in [str,None]:
-            image = self.cleaned_data['image']
-            image = resize_image(image,1920,570)
-            # Convert the file to base64 and store it in the Base64Field
-            instance.image = image
+        # if  self.cleaned_data['image'] and type(self.cleaned_data['image']) not in [str,None]:
+        #     image = self.cleaned_data['image']
+        #     image = resize_image(image,1920,570)
+        #     # Convert the file to base64 and store it in the Base64Field
+        #     instance.image = image
+
         
         if commit:
             instance.save()
+            # Process and save each uploaded file
+            for index, uploaded_file in enumerate(self.files.getlist('file')):
+                product_image = save_product_file(instance, uploaded_file, index)
             # Set the tags for the created product
             tags = self.cleaned_data.get('tags', [])
             instance.tags.set(tags) 
@@ -365,17 +370,22 @@ class ProductUpdateForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.slug = slugify(self.cleaned_data['name'])
-        if  self.cleaned_data['image'] and type(self.cleaned_data['image']) not in [str,None]:
-            image = self.cleaned_data['image']
-            image = resize_image(image,1920,570)
-            # Convert the file to base64 and store it in the Base64Field
-            instance.image = image
+        # if  self.cleaned_data['image'] and type(self.cleaned_data['image']) not in [str,None]:
+        #     image = self.cleaned_data['image']
+        #     image = resize_image(image,1920,570)
+        #     # Convert the file to base64 and store it in the Base64Field
+        #     instance.image = image
+        if self.cleaned_data['image']:
+            instance.image = self.cleaned_data['image']
 
         # Set the tags for the created product
         tags = self.cleaned_data.get('tags', [])
         instance.tags.set(tags)
         
         if commit:
+            # Process and save each uploaded file
+            for index, uploaded_file in enumerate(self.files.getlist('file')):
+                product_image = save_product_file(instance, uploaded_file, index)
             instance.save()
 
         return instance

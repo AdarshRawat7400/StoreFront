@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "avadhstore",
+  "private_key_id": "e88b94e303ee08709459f8d86aabf2d9789ed2a8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDGymxCIZcHdcmH\nXXUeNKMZzMnjuPfvXAB7Q4HzenMpoc4YCJ83oyp4Z7pOuNqdE2e7CqK0m8IHBSMS\nUyAOuRfMjW8CSFDrlLGL9XWPAvjeBmQaiutg6F8evo4U83urV7+bnV9k94u+ieIA\ny2/XJ6UZBcRsNLCqIDUgtXHPF7bbL5zTlnJ8I+wana7VIxczKMQqMH0Cte5b9arA\ntDzy+QXklGyRxrSI56KPRA4WNw8qqOAIIY7BPYSsRiLcD5WofDkcA3lQycZG8Wg9\nohQeKYkgsoQvyrbxEYWB/wAUUL5WFDeh8bpiOtf0OiB+Lt9jBfbPuXmvM635amtf\npbr6YDrDAgMBAAECggEAWPRy7kLWsQ1pwYu2IW6ff6eOvjrio7cRNhd22su0JfCU\nZ1fQW5bFpfyQt7JrjTeGRwIS3ewHLpoDYCtXYI8+EZhGkQhoQYsXyg/sa7MCR2Qn\nvmLkwkgpbHoL3V85O2q4QLvy2J0XaQuNWRqv8OD6NZDJnTwUxARGkdzv0SKE/l5t\nb2OmcijFuMaPQSAftu5YFQtzWqBr2C5KnVYBzzTx5DkeDDcHyhXTbRAE4piEaLpM\n0OaVFodLf/aH2Q7swULiMK53mAUWYOvk0UQg6LnWMuUi+TmM8GE87+oOxE7S3uOi\nX5QdOdq0FYfs1NdWS0yQLIDd36ZdzROLlHfi9Bj/3QKBgQDqIynkxg2ozysLNfu6\nu1+o6iywZP30eDAGSz+yjdBvmGUssySteLvn95xiaCzxvhL9n0KnFA2Jd0YQSMwx\nI2mDF0dyd8jS2Urac8EgiMJwf2iQOw2HId0x+9XbtLH2FUTy3ivihw7W5iQu+bPz\nXy8nsMcTNBQx0HGgzI09SgJMZwKBgQDZWlScSnc/Gq72dy7uT/QHQI9lFfm9Fbls\nVSbAox8NyGplm6BG/t9okGffeWO5wDS/qTBrWk7cZ0bF2kPaQlK/52O5GafehGay\naBkNn9heS+5IhbpsKPmcNRHiuLlN/1OjNIrfwsPvEhMuirCJQTqsLUjO9R8mO86B\nU61z8VtlRQKBgCaWbwQeRAgLRKvPVNJ8qRJcrcrQii4tVLTk1/Wke7K4qgwI5kWU\nvVtIqsRpKOcajWSxR7njiyuZtblfVg/PJ0eMoaDS7w0Y9MY2B6FGCM2joecLZHpd\n8WeYerGAAUhuTvO7+/2UhrSSL2pyit7UVCA1eUnH7oAbO27l520vcluHAoGAdj8E\nZPrGIRidMwzoBVKOChv/Zxkrgsj81YkFyit0S4VLDPg7nCQw2qwlNpjNvlJo4BRl\neSHqYVH2WNFDtMv8RNbXk+33O8GANXMYnibmCXb5rY7DOvCXy3m7v0KL3XkYwWNm\nYhGNktSchueA30sTZnREdgM47Q4AbK9fYAJgnJkCgYEArghIvhmDjaBbv5/g9Gg9\naEB016rm1IOz0GFHEMy9mqZq+wKDWK/HhkdQQvkUhcPtQTXmDqnwNc5gX+FwRXYj\nZunB1V5mvshLqxc3ZJ5ILBpeR2240Ub4pCJ3RuiJKRqjvh9hdOn18HWLgdjGuv4R\nUSRGFCqmeBAlFD9Ri/Rn3lQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "avadhstore@avadhstore.iam.gserviceaccount.com",
+  "client_id": "110238100802812312737",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/avadhstore%40avadhstore.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

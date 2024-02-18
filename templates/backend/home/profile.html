@@ -137,8 +137,8 @@
             <div class="col-md-4">
               <div class="card card-profile">
                 <div class="card-avatar">
-                  <a href="{% if user.profile_pic %}data:image/png;base64,{{ user.profile_pic }}{% else %}/static/backend/assets/img/faces/marc.jpg{% endif %}" data-lightbox="profile-pic" data-title="Profile Picture">
-                    <img class="img" id="profile_pic" src="{% if user.profile_pic %}data:image/png;base64,{{ user.profile_pic }}{% else %}/static/backend/assets/img/faces/marc.jpg{% endif %}" />
+                  <a href="{% if user.profile %}{{ user.profile.url }}{% else %}/static/backend/assets/img/faces/marc.jpg{% endif %}" data-lightbox="profile-pic" data-title="Profile Picture">
+                    <img class="img" id="profile_pic" src="{% if user.profile.url %}{{ user.profile.url }}{% else %}/static/backend/assets/img/faces/marc.jpg{% endif %}" />
                   </a>
                 
               </div>
@@ -197,8 +197,7 @@
               processData: false,
               success: function (resp) {
                   // Handle success
-
-                  document.getElementById('profile_pic').src = 'data:image/png;base64,' + resp.base64_image;
+                  document.getElementById('profile_pic').src = resp.profile;
               },
               error: function (resp) {
                   // Handle error

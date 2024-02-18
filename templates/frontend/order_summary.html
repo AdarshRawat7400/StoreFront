@@ -22,7 +22,18 @@
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td>
-              <img src="data:image/png;base64,{{ order_item.item.image }}" style="width: 130px;"> 
+              <!-- <img src="{{ order_item.item.image.url }}" style="width: 130px;">  -->
+              {% if order_item.item.images.exists %}
+              {% for image in order_item.item.images.all %}
+              {% if forloop.first %}
+              <img src="{{ image.image.url }}" alt="Product Image" style="width: 130px;">
+              {% endif %}
+              {% endfor %}
+              {% else %}
+              <!-- Provide a fallback image if there are no images -->
+              <img src="{% static 'path/to/your/fallback-image.jpg' %}" alt="Fallback Image" style="height: 360px;">
+          {% endif %}
+
           </td>
             <td>{{ order_item.item.name }}</td>
             <td>{{ order_item.item.price }}</td>

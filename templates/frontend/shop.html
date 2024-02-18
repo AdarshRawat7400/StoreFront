@@ -3,21 +3,48 @@
 {% load category_template_tags %}
 {% block content %}
 <style type="text/css">
-	.selection-2{
-	display: block;
-    width: 100%;
-    height: calc(1.5em + .75rem + 2px);
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da !important;
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+	.selection-2 {
+		display: block;
+		width: 100%;
+		height: calc(1.5em + .75rem + 2px);
+		padding: .375rem .75rem;
+		font-size: 1rem;
+		font-weight: 400;
+		line-height: 1.5;
+		color: #495057;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 1px solid #ced4da !important;
+		border-radius: .25rem;
+		transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 	}
+	.selected-discount {
+        font-size: 12px; /* Adjust the font size as needed */
+        margin-top: 10px;
+    }
+	.flex-sb-m .w-size11 {
+        margin-right: 50px; /* Adjust the margin as needed */
+    }
+	#load-more-container {
+    text-align: right;   /* Align the button to the right */
+    margin-top: 20px;    /* Add some spacing from the content above */
+}
+
+#load-more {
+    padding: 10px 20px;   /* Adjust padding for better appearance */
+    font-size: 16px;     /* Set the font size */
+    background-color: #3498db;  /* Set the background color */
+    color: #fff;         /* Set the text color */
+    border: none;        /* Remove border */
+    border-radius: 5px;  /* Add border radius for rounded corners */
+    cursor: pointer;     /* Add a pointer cursor on hover */
+    transition: background-color 0.3s;  /* Smooth transition for background color */
+}
+
+#load-more:hover {
+    background-color: #2980b9;  /* Change background color on hover */
+}
+
 </style>
 
 	<!-- Title Page -->
@@ -62,26 +89,61 @@
 							<div class="m-text15 p-b-17">
 								Price
 							</div>
-
+	
 							<div class="wra-filter-bar">
-								<div id="filter-bar"></div>
-							</div>
-
-							<div class="flex-sb-m flex-w p-t-16">
-								<div class="w-size11">
-									<!-- Button -->
-									<button class="flex-c-m size4 bg7 bo-rad-15 hov1 s-text14 trans-0-4">
-										Filter
-									</button>
-								</div>
-
+								<!-- Slider Container -->
+								<div id="price-slider"></div>
+							
+								<!-- Display the Price Range -->
 								<div class="s-text3 p-t-10 p-b-10">
 									Range: ₹<span id="value-lower">610</span> - ₹<span id="value-upper">980</span>
 								</div>
 							</div>
+	
+							<div class="m-text15 p-b-17">
+								Rating
+							</div>
+						
+							<!-- Rating Slider Container -->
+							<div id="rating-slider"></div>
+						
+							<!-- Display the Rating Range -->
+							<div class="s-text3 p-t-10 p-b-10">
+								Range: <span id="rating-value-lower">1</span> - <span id="rating-value-upper">5</span>
+							</div>
+	
+							<div class="m-text15 p-b-17">
+								Discount
+							</div>
+	
+							<div class="discount-slider">
+								<input type="text" id="discount-range" />
+							</div>
+							
+							<div class="selected-discount">
+								Selected Discount: <span id="selected-discount">0% or more</span>
+							</div>
+						
+							
+	
+							<div class="flex-sb-m flex-w p-t-16">
+								<div class="w-size11">
+									<!-- Filter Button -->
+									<button class="flex-c-m size4 bg7 bo-rad-15 hov1 s-text14 trans-0-4" id="filterButton">
+										Filter
+									</button>
+								</div>
+								<div class="w-size11">
+									<!-- Reset Button -->
+									<button class="flex-c-m size4 bg7 bo-rad-15 hov1 s-text14 trans-0-4" id="resetButton">
+										Reset
+									</button>
+								</div>
+							</div>
+							
 						</div>
 
-						<div class="filter-color p-t-22 p-b-50 bo3">
+						<div class="filter-color p-t-22 p-b-50 bo3" hidden="true">
 							<div class="m-text15 p-b-12">
 								Color
 							</div>
@@ -124,7 +186,7 @@
 							</ul>
 						</div>
 
-						<div class="search-product pos-relative bo4 of-hidden">
+						<div class="search-product pos-relative bo4 of-hidden" hidden="true">
 							<input class="s-text7 size6 p-l-23 p-r-50" type="text" name="search-product" placeholder="Search Products...">
 
 							<button class="flex-c-m size5 ab-r-m color2 color0-hov trans-0-4">
@@ -139,16 +201,16 @@
 					<div class="flex-sb-m flex-w p-b-35">
 						<div class="flex-w">
 						
-							<div class="rs2-select2 bo4 of-hidden w-size12 m-t-5 m-b-5 m-r-10" >
-								<select class="selection-2" name="sorting">
-									<option>Default Sorting</option>
-									<option>Popularity</option>
-									<option>Price: low to high</option>
-									<option>Price: high to low</option>
+							<div class="rs2-select2 bo4 of-hidden w-size12 m-t-5 m-b-5 m-r-10">
+								<select class="selection-2" id="id_sorting" name="sorting">
+									<option value="default" {% if sorting == 'default' %}selected{% endif %}>Default Sorting</option>
+									<option value="popularity" {% if sorting == 'popularity' %}selected{% endif %}>Popularity</option>
+									<option value="low_to_high" {% if sorting == 'low_to_high' %}selected{% endif %}>Price: Low to High</option>
+									<option value="high_to_low" {% if sorting == 'high_to_low' %}selected{% endif %}>Price: High to Low</option>
 								</select>
 							</div>
 
-							<div class="rs2-select2 bo4 of-hidden w-size12 m-t-5 m-b-5 m-r-10">
+							<div class="rs2-select2 bo4 of-hidden w-size12 m-t-5 m-b-5 m-r-10" hidden="true">
 								<select class="selection-2" name="sorting">
 									<option>Price</option>
 									<option>₹0.00 - ₹50.00</option>
@@ -167,56 +229,26 @@
 					</div>
 
 					<!-- Product -->
-					<div class="row">
-						{% for item in object_list %}
-						<div class="col-sm-12 col-md-6 col-lg-4 p-b-50">
-							<!-- Block2 -->
-							<div class="block2">
-								<a href="{{item.get_absolute_url}}">
-								<div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
-									<img src="data:image/png;base64,{{ item.image }}" alt="IMG-PRODUCT" 
-								style="height: 360px;">
-
-									<div class="block2-overlay trans-0-4">
-										<a href="#" class="block2-btn-addwishlist hov-pointer trans-0-4">
-											<i class="icon-wishlist icon_heart_alt" aria-hidden="true"></i>
-											<i class="icon-wishlist icon_heart dis-none" aria-hidden="true"></i>
-										</a>
-
-										<div class="block2-btn-addcart w-size1 trans-0-4"> 
-											<!-- Button -->
-											<button class="flex-c-m size1 bg4 bo-rad-23 hov1 s-text1 trans-0-4">
-												Add to Cart
-											</button>
-										</div>
-									</div>
-								</div>
-								</a>
-
-								<div class="block2-txt p-t-20">
-									<a href="{{item.get_absolute_url}}" class="block2-name dis-block s-text3 p-b-5">
-										{{item.name}}
-									</a>
-
-									<span class="block2-price m-text6 p-r-5">
-										₹{{item.price}}
-									</span>
-								</div>
-							</div>
+						<div id="product-row" class="row">
+							{% for item in object_list %}
+							{% include 'frontend/product_item.html' %}
+		
+							{% endfor %}
+		
+		
 						</div>
-						{% endfor %}
-
 						
-
-						
+	
 				
-				</div>
 				<!-- ---- row end ------- -->
+				<div id="load-more-container">
+					<button id="load-more">Load More</button>
+				</div>
 
 				<br>
 				<!-- Pagination -->
 				{% if is_paginated %}
-				<div class="pagination flex-m flex-w p-t-26">
+				<div class="pagination flex-m flex-w p-t-26" hidden="true">
 					{% if page_obj.has_previous %}
 					<a class="page-link" href="?page={{ page_obj.previous_page_number}}" aria-label="Previous">
 						<span aria-hidden="true">&laquo;</span>
@@ -240,3 +272,175 @@
 
 
 		{% endblock content %}
+
+
+
+
+		
+
+{% block extra_scripts %}
+<script>
+
+	
+	$(document).ready(function () {
+		var searchTerm = '{{ search_term }}';  // Get the search term from the Django context
+		if (searchTerm) {
+			// Set value for desktop Select2
+			var desktopSelect = $('#single-select-clear-field-desktop');
+			desktopSelect.append(new Option(searchTerm, searchTerm, true, true));
+
+			// Set value for mobile Select2
+			var mobileSelect = $('#single-select-clear-field-mobile');
+			mobileSelect.append(new Option(searchTerm, searchTerm, true, true));
+		}
+	});
+
+	$(document).ready(function() {
+        // Initialize noUiSlider
+        var slider = document.getElementById('price-slider');
+
+        noUiSlider.create(slider, {
+            start: [{{min_price}},{{max_price}}], // Initial values
+            connect: true,
+            range: {
+                'min': {{min_price_limit}},
+                'max': {{max_price_limit}} // Set your maximum price
+            },
+            format: wNumb({
+                decimals: 0
+            })
+        });
+
+        // Update price range values on slider change
+        slider.noUiSlider.on('update', function(values, handle) {
+            $('#value-lower').text(values[0]);
+            $('#value-upper').text(values[1]);
+        });
+
+		// Initialize noUiSlider for Rating
+        var ratingSlider = document.getElementById('rating-slider');
+
+        noUiSlider.create(ratingSlider, {
+            start: [{{rating}}, 5], // Initial values
+            connect: true,
+            range: {
+                'min': 1,
+                'max': 5
+            },
+            step: 0.2,
+            format: wNumb({
+                decimals: 1
+            })
+        });
+
+        // Update rating range values on slider change
+        ratingSlider.noUiSlider.on('update', function(values, handle) {
+            $('#rating-value-lower').text(values[0]);
+            $('#rating-value-upper').text(values[1]);
+        });
+
+
+		  // Initialize ionRangeSlider for Discounts
+		  var discountSlider = $("#discount-range");
+
+		  discountSlider.ionRangeSlider({
+        type: "single",
+        grid: true,
+        min: 0,
+        max: 70, // Set the maximum value to 70
+        from: {{discount_percentage}}, // Set to the initial value
+        step: 10, // Set the step to 10 for increments of 10%
+        postfix: "%",
+        onStart: function(data) {
+            updateSelectedDiscount(data.from);
+        },
+        onChange: function(data) {
+            updateSelectedDiscount(data.from);
+        }
+    });
+
+    function updateSelectedDiscount(value) {
+        var displayText = value === 70 ? value + "%" : value + "% or more";
+        $('#selected-discount').text(displayText);
+    }
+
+
+			// Filter Button Click Event
+			$('#filterButton').on('click', function() {
+        // Get the selected values
+        var selectedPriceRange = slider.noUiSlider.get();
+        var selectedRatingRange = ratingSlider.noUiSlider.get();
+        var selectedDiscount = $("#discount-range").data("ionRangeSlider").result.from;
+		var search_term = '{{search_term}}'
+		var selectedSorting = $('#id_sorting').val();
+
+
+
+        // Construct the URL with the selected filters
+        var url = window.location.pathname + '?';
+
+		if (search_term) {
+            url += 'q=' + encodeURIComponent(search_term) + '&';
+        }
+        // Include all values without comparing
+	    url += 'minp=' + selectedPriceRange[0] + '&maxp=' + selectedPriceRange[1] + '&';
+        url += 'rtg=' + selectedRatingRange[0] + '&';
+        url += 'dp=' + selectedDiscount + '&';
+		// Add the sorting option to the URL
+		if (selectedSorting !== 'default') {
+        url += 'sorting=' + encodeURIComponent(selectedSorting) + '&';
+   		 }
+		
+        // Remove the trailing '&'
+        url = url.slice(0, -1);
+
+        // Redirect to the modified URL
+        window.location.href = url;
+    });
+
+
+	// Attach a change event listener to the select element
+	$('#id_sorting').on('change', function () {
+            // Trigger a click event on the button with the id 'your-button-id'
+            $('#filterButton').click();
+        });
+	
+	// Reset Button Click Event
+$('#resetButton').on('click', function() {
+    // Construct the URL without query parameters
+    var urlWithoutParams = window.location.pathname;
+
+    // Redirect to the modified URL without query parameters
+    window.location.href = urlWithoutParams;
+});
+		
+    });
+	
+
+	$(document).ready(function() {
+    var page = 2;  // Initial page number for the next set of items
+
+    $('#load-more').on('click', function() {
+        $.ajax({
+            url: window.location.href,
+            type: 'POST',
+            data: {'page': page},
+			beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            },
+            success: function(data) {
+                if (data.data) {
+                    $('#product-row').append(data.data);
+                    page++;
+                } else {
+                    $('#load-more').hide();  // No more items to load
+                }
+            }
+        });
+    });
+
+
+	 
+});
+</script>
+{% endblock extra_scripts %}

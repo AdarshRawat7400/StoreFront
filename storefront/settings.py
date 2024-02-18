@@ -7,16 +7,12 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-pmwhm(7i!-zs&hhtc%e9+=@r_&acpcekr94t0m^2l#jl$)z8(c')
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+ALLOWED_HOSTS = ['34.131.103.102','127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -28,7 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'rest_framework',
-    # 'social_django',
+    'social_django',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -39,7 +35,9 @@ INSTALLED_APPS = [
     'django_countries',
     'phonenumber_field',
     "django_extensions",
-    "django_ckeditor_5"
+    "django_ckeditor_5",
+    "gdstorage"
+
 ] + [
     'apps.core',
     'apps.users',
@@ -54,6 +52,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 SOCIAL_AUTH_AUTH0_DOMAIN = config('AUTH0_DOMAIN')
 SOCIAL_AUTH_AUTH0_KEY = config('AUTH0_CLIENT_ID')
 SOCIAL_AUTH_AUTH0_SECRET = config('AUTH0_CLIENT_SECRET')
+SOCIAL_AUTH_AUTH0_CLIENT_ID = config('SOCIAL_AUTH_AUTH0_CLIENT_ID')
 
 CKEDITOR_5_CONFIGS = {
     'default': {
@@ -79,9 +78,9 @@ LOGIN_REDIRECT_URL = '/'
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': '572879279979-ojt65gat9rmt77epas4qj3fuea1an65u.apps.googleusercontent.com',
-            'secret': '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',
-            'key': '666',
+            'client_id': config('GOOGLE_SOCIAL_AUTH_CLIENT_ID'),
+            'secret':  config('GOOGLE_SOCIAL_AUTH_SECRET'),
+            'key': config('GOOGLE_SOCIAL_AUTH_KEY'),
         },
     }
 }
@@ -117,14 +116,15 @@ TEMPLATES = [
 ]
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, 'db.sqlite3')
-    },
-    # 'default': dj_database_url.config(
-    #     default='postgres://storefront_fth4_user:NRwr11CWNYvwojYjQTAKGzqt7viTt9Pc@dpg-cn7klpnsc6pc73ca8ovg-a.oregon-postgres.render.com/storefront_fth4',
-    #     conn_max_age=600,
-    # )
+
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASS'),
+        'HOST': config('DB_HOST'),  # Set to the appropriate host
+        'PORT': config('DB_PORT'),       # Set to the appropriate port
+    }
 }
 
 LANGUAGE_CODE = 'en-us'
@@ -364,3 +364,21 @@ CKEDITOR_5_CONFIGS = {
         },
     },
 }
+
+
+
+#
+# Google Drive Storage Settings
+#
+GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE = os.path.join(BASE_DIR, config('GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE'))
+
+
+# DROPBOX_OAUTH2_TOKEN = config('DROPBOX_OAUTH2_TOKEN')
+# DROPBOX_APP_KEY = config('DROPBOX_APP_KEY')
+# DROPBOX_APP_SECRET = config('DROPBOX_APP_SECRET')
+# DROPBOX_OAUTH2_REFRESH_TOKEN = config('DROPBOX_OAUTH2_REFRESH_TOKEN')
+# DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+
+
+
+

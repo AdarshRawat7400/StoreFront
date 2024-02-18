@@ -4,6 +4,9 @@ from apps.users.models import Admin, Users
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
 
+
+    
+
     def pre_social_login(self, request, sociallogin):
             # Access social login details
             provider = sociallogin.account.provider

@@ -6,6 +6,8 @@ from apps.core.models import AbstractBaseModel
 from django_countries.fields import CountryField
 from django_ckeditor_5.fields import CKEditor5Field
 from django.urls import reverse,reverse_lazy
+from django_resized import ResizedImageField
+
 
 
 # Create your models here.
@@ -41,7 +43,9 @@ class Category(AbstractBaseModel):
     name = models.CharField(max_length=255)
     description = CKEditor5Field('Text', config_name='extends')
     slug = models.SlugField(unique=True, blank=True)
-    image = Base64Field(null=True, blank=True)
+    image = ResizedImageField(size=[1920, 570],force_format="WEBP", quality=75, upload_to='bucket/categories',null=True,blank=True)
+
+
     is_active = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
@@ -66,7 +70,7 @@ class Product(AbstractBaseModel):
     stock_quantity = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     sku = models.CharField(max_length=50, unique=True)
-    image = Base64Field(null=True, blank=True)
+    # image = ResizedImageField(size=[1920, 570],force_format="WEBP", quality=75, upload_to='bucket/products',null=True,blank=True)
     tags = models.ManyToManyField(Tag)
     brand = models.CharField(max_length=255, null=True, blank=True)
     manufacturer = models.CharField(max_length=255, null=True, blank=True)
@@ -100,6 +104,12 @@ class Product(AbstractBaseModel):
 
     
 
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+    image = ResizedImageField(size=[1920, 570], force_format="WEBP", quality=75, upload_to='bucket/products/images', null=True, blank=True)
+
+
 class Review(AbstractBaseModel):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -108,24 +118,6 @@ class Review(AbstractBaseModel):
 
     def __str__(self):
         return f"{self.user} - {self.product}"
-
-class Order(AbstractBaseModel):
-    customer = models.ForeignKey(Users, on_delete=models.CASCADE)
-    ref_code = models.CharField(max_length=20)
-    order_date = models.DateTimeField(auto_now_add=True)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    shipping_address = models.ForeignKey(
-        'BillingAddress', related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
-    billing_address = models.ForeignKey(
-        'BillingAddress', related_name='billing_address', on_delete=models.SET_NULL, blank=True, null=True)
-    payment_status = models.CharField(max_length=50, choices=[('PENDING', 'Pending'), ('PAID', 'Paid')])
-    order_status = models.CharField(max_length=50, choices=[('PROCESSING', 'Processing'), ('SHIPPED', 'Shipped'), ('DELIVERED', 'Delivered')])
-    delivery_date = models.DateField(null=True, blank=True)
-    tracking_number = models.CharField(max_length=50, null=True, blank=True)
-
-    def __str__(self):
-        return f"Order #{self.pk} - {self.customer}"
-    
 
 class BillingAddress(AbstractBaseModel):
     customer = models.ForeignKey(Users, on_delete=models.CASCADE)
@@ -256,7 +248,8 @@ class Slide(AbstractBaseModel):
     caption1 = models.CharField(max_length=100)
     caption2 = models.CharField(max_length=100)
     link = models.CharField(max_length=100)
-    image = Base64Field(null=True, blank=True,help_text="Size: 1920x570")
+    image = ResizedImageField(size=[1920, 570],force_format="WEBP", quality=75, upload_to='bucket/slides',help_text="Size: 1920x570",null=True,blank=True)
+
 
     
     is_active = models.BooleanField(default=True)

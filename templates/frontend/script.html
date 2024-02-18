@@ -15,6 +15,15 @@
 <script type="text/javascript" src="/static/frontend/vendor/countdowntime/countdowntime.js"></script>
 <script type="text/javascript" src="/static/frontend/vendor/lightbox2/js/lightbox.min.js"></script>
 <script type="text/javascript" src="/static/frontend/vendor/sweetalert/sweetalert.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
+
+<!-- ion.rangeSlider CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" />
+
+<!-- ion.rangeSlider JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
 
 <!-- Include Popper.js and Bootstrap -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -26,67 +35,56 @@
 <script type="text/javascript" src="/static/frontend/js/slick-custom.js"></script>
 <script type="text/javascript" src="/static/frontend/js/main.js"></script>
 
+
 <!-- Initialize scripts dependent on jQuery after it's loaded -->
 <script type="text/javascript">
   $(document).ready(function() {
+
+  
     // Your jQuery-dependent code here
     $(".selection-1").select2({
       minimumResultsForSearch: 20,
       dropdownParent: $("#dropDownSelect1")
     });
 
-    $(".block2-btn-addcart").each(function() {
-        var nameProduct = $(this)
-            .parent()
-            .parent()
-            .parent()
-            .find(".block2-name")
-            .html();
+    $('body').on('click', '.block2-btn-addcart', function() {
+    var nameProduct = $(this)
+        .closest('.block2')
+        .find(".block2-name")
+        .html();
 
-          var slugProduct = $(this)
-            .parent()
-            .parent()
-            .parent()
-            .find(".block2-slug")
-            .html();
-          
+    var slugProduct = $(this)
+        .closest('.block2')
+        .find(".block2-slug")
+        .html();
 
+    // Check if the user is logged in
+    {% if request.user.is_authenticated %}
+        swal(nameProduct, "is added to cart !", "success");
+        addToCart(slugProduct);
+    {% else %}
+        // Redirect to the login page
+        window.location.href = "{% url 'frontend:auth0-login' %}";
+    {% endif %}
+});
 
-        $(this).on("click", function() {
-            // Check if the user is logged in
-            {% if request.user.is_authenticated %}
-                swal(nameProduct, "is added to cart !", "success");
-                addToCart(slugProduct)
-            {% else %}
-                // Redirect to the login page
-                window.location.href = "{% url 'account_login' %}";
-            {% endif %}
-        });
-
-        function addToCart(slugProduct) {
-        // Make an AJAX request to call the Django view
-        $.ajax({
-            type: "POST",
-            url: "{% url 'frontend:add-to-cart' '123' %}".replace('123', slugProduct),
-            data :{
-              csrfmiddlewaretoken: '{{ csrf_token }}'
-
-            },
-            
-            success: function (response) {
-                console.log("MESSAGE", response.message);
-                // Process the message as needed
-            },
-            error: function (error) {
-                console.error("Error:", error);
-            }
-        });
-    }
-   
-  
-  
-  });
-
+function addToCart(slugProduct) {
+    // Make an AJAX request to call the Django view
+    $.ajax({
+        type: "POST",
+        url: "{% url 'frontend:add-to-cart' '123' %}".replace('123', slugProduct),
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+            console.log("MESSAGE", response.message);
+            // Process the message as needed
+        },
+        error: function(error) {
+            console.error("Error:", error);
+        }
+    });
+}
 
   });
 </script>

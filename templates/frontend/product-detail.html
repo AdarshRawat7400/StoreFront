@@ -27,23 +27,13 @@
 					<div class="wrap-slick3-dots"></div>
 
 					<div class="slick3">
-						<div class="item-slick3" data-thumb="data:image/png;base64,{{ object.image }}">
-							<div class="wrap-pic-w">
-								<img src="data:image/png;base64,{{ object.image }}" alt="{{ object.name }}">
+						{% for image in object.images.all %}
+							<div class="item-slick3" data-thumb="{{ image.image.url }}">
+								<div class="wrap-pic-w">
+									<img src="{{ image.image.url }}" alt="{{ image.name }}">
+								</div>
 							</div>
-						</div>
-
-						<div class="item-slick3" data-thumb="data:image/png;base64,{{ object.image }}">
-							<div class="wrap-pic-w">
-								<img src="data:image/png;base64,{{ object.image }}" alt="IMG-PRODUCT">
-							</div>
-						</div>
-
-						<div class="item-slick3" data-thumb="data:image/png;base64,{{ object.image }}">
-							<div class="wrap-pic-w">
-								<img src="data:image/png;base64,{{ object.image }}" alt="IMG-PRODUCT">
-							</div>
-						</div>
+						{% endfor %}
 					</div>
 				</div>
 			</div>
