@@ -39,10 +39,19 @@
                 {{ item.name }}
             </a>
 
-            <!-- Product Price -->
-            <span class="block2-price m-text6 p-r-5">
-                ₹{{ item.price }}
-            </span>
+             <!-- Product Prices -->
+             {% if item.discounted_price and item.discounted_price < item.price %}
+             <span class="block2-oldprice m-text7 p-r-5">
+                 ₹{{ item.price }}
+             </span>
+             <span class="block2-newprice m-text8 p-r-5">
+                 ₹{{ item.discounted_price }}
+             </span>
+         {% else %}
+             <span class="block2-price m-text6 p-r-5">
+                 ₹{{ item.price }}
+             </span>
+         {% endif %}
 
             <!-- Product Slug (Hidden) -->
             <span class="block2-slug m-text6 p-r-5" hidden="true">{{ item.slug }}</span>

@@ -44,13 +44,13 @@
 				</h4>
 
 				
-				{% if object.discount_price %}
+				{% if object.discounted_price %}
 								<span class="block2-oldprice m-text7 p-r-5" style="font-size: 1.5rem;">
 									₹{{ object.price }}
 								</span>
 
 								<span class="block2-newprice m-text8 p-r-5" style="font-size: 1.5rem;">
-									₹{{ object.discount_price }}
+									₹{{ object.discounted_price }}
 								</span>
 								{% else %}
 								<span class="m-text17">
@@ -187,8 +187,14 @@
 			<!-- Slide2 -->
 			<div class="wrap-slick2">
 				<div class="slick2">
+					{% for item in related_items_list %}
+					
+					{% include 'frontend/product_item.html' %}
+					
+				
+					{% endfor %}
 
-					<div class="item-slick2 p-l-15 p-r-15">
+					<div class="item-slick2 p-l-15 p-r-15" hidden="true">
 						<!-- Block2 -->
 						<div class="block2">
 							<div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
@@ -221,7 +227,7 @@
 						</div>
 					</div>
 
-					<div class="item-slick2 p-l-15 p-r-15">
+					<div class="item-slick2 p-l-15 p-r-15" hidden="true">
 						<!-- Block2 -->
 						<div class="block2">
 							<div class="block2-img wrap-pic-w of-hidden pos-relative">
@@ -254,7 +260,7 @@
 						</div>
 					</div>
 
-					<div class="item-slick2 p-l-15 p-r-15">
+					<div class="item-slick2 p-l-15 p-r-15" hidden="true">
 						<!-- Block2 -->
 						<div class="block2">
 							<div class="block2-img wrap-pic-w of-hidden pos-relative">
@@ -287,7 +293,7 @@
 						</div>
 					</div>
 
-					<div class="item-slick2 p-l-15 p-r-15">
+					<div class="item-slick2 p-l-15 p-r-15" hidden="true">
 						<!-- Block2 -->
 						<div class="block2">
 							<div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelsale">
@@ -324,7 +330,7 @@
 						</div>
 					</div>
 
-					<div class="item-slick2 p-l-15 p-r-15">
+					<div class="item-slick2 p-l-15 p-r-15" hidden="true">
 						<!-- Block2 -->
 						<div class="block2">
 							<div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
@@ -357,7 +363,7 @@
 						</div>
 					</div>
 
-					<div class="item-slick2 p-l-15 p-r-15">
+					<div class="item-slick2 p-l-15 p-r-15" hidden="true">
 						<!-- Block2 -->
 						<div class="block2">
 							<div class="block2-img wrap-pic-w of-hidden pos-relative">
@@ -390,7 +396,7 @@
 						</div>
 					</div>
 
-					<div class="item-slick2 p-l-15 p-r-15">
+					<div class="item-slick2 p-l-15 p-r-15" hidden="true">
 						<!-- Block2 -->
 						<div class="block2">
 							<div class="block2-img wrap-pic-w of-hidden pos-relative">
@@ -423,7 +429,7 @@
 						</div>
 					</div>
 
-					<div class="item-slick2 p-l-15 p-r-15">
+					<div class="item-slick2 p-l-15 p-r-15" hidden="true">
 						<!-- Block2 -->
 						<div class="block2">
 							<div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelsale">
@@ -467,7 +473,7 @@
 
 
 	<!-- Footer -->
-	<footer class="bg6 p-t-45 p-b-43 p-l-45 p-r-45">
+	<footer class="bg6 p-t-45 p-b-43 p-l-45 p-r-45"  hidden="true">
 		<div class="flex-w p-b-90">
 			<div class="w-size6 p-t-30 p-l-15 p-r-15 respon3">
 				<h4 class="s-text12 p-b-30">

@@ -240,6 +240,16 @@ class ItemDetailView(DetailView):
     model = Product
     template_name = "frontend/product-detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Add additional context data here
+        # For example, you can pass related objects or any other data you need
+        context['related_items_list'] = Product.objects.filter(category=self.object.category)[:10]
+        # context['special_offer'] = self.object.is_on_sale()
+
+        return context
+
 
 # class CategoryView(DetailView):
 #     model = Category

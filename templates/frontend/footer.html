@@ -49,6 +49,17 @@
 #footer-main img{
 	margin-right: 0.6rem;
 }
+
+.flex-container {
+    display: flex;
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+}
+
+.flex-item {
+    margin-right: 15px; /* Adjust as needed */
+}
+
 </style>
 
 <footer id="footer-main">
@@ -108,16 +119,30 @@
         </div> -->
       </div>
       <hr>
-      <div class="row">
-        <div class="col-sm-6">
-          
-        </div>
-        <div class="col-sm-6">
-          
-        </div>
-        <hr>
-        <!-- <a href="https://github.com/zinmyoswe" style="margin-left: 1rem">Privacy Policy | @zinmyoswe 2019-2020</a> -->
-      </div>
+      <div class="t-center p-l-15 p-r-15 flex-container">
+        <a href="#" class="flex-item">
+            <img class="h-size2" src="{% static 'frontend/images/icons/paypal.png' %}" alt="IMG-PAYPAL">
+        </a>
+    
+        <a href="#" class="flex-item">
+            <img class="h-size2" src="{% static 'frontend/images/icons/visa.png' %}" alt="IMG-VISA">
+        </a>
+    
+        <a href="#" class="flex-item">
+            <img class="h-size2" src="{% static 'frontend/images/icons/mastercard.png' %}" alt="IMG-MASTERCARD">
+        </a>
+    
+        <a href="#" class="flex-item">
+            <img class="h-size2" src="{% static 'frontend/images/icons/express.png' %}" alt="IMG-EXPRESS">
+        </a>
+    
+        <a href="#" class="flex-item">
+            <img class="h-size2" src="{% static 'frontend/images/icons/discover.png' %}" alt="IMG-DISCOVER">
+        </a>
+    
+       
+    </div>
+    
     </div>
   </footer>
 <!-- ------------------------------footer end---------------------------------- -->
