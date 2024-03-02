@@ -294,6 +294,23 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
  
+ document.addEventListener('DOMContentLoaded', function () {
+  
+
+    // Attach an event listener to the form submission
+    document.getElementById('create-product-form').addEventListener('submit', function (e) {
+                // Get the CKEditor instance
+                const editor = ClassicEditor.instances[0];
+
+// If CKEditor instance exists, update the corresponding textarea
+if (editor) {
+    // Update the original textarea with CKEditor content
+    document.getElementById('id_description_long').value = editor.getData();
+}
+
+    });
+});
+
 
   $(document).ready(function() {
     // Initialize Select2 for the tags and category fields
@@ -301,30 +318,7 @@
     $('#id_category').select2();
   });
 
-  // $(document).ready(function() {
-  //   // Handle change event on file input
-  //   $('#{{ product_form.image.id_for_label }}').change(function() {
-  //     var fileInput = this;
-  //     var selectedImagePreview = $('#selected-image-preview');
-  //     var selectedImage = $('#selected-image');
-
-  //     if (fileInput.files && fileInput.files[0]) {
-  //       var reader = new FileReader();
-
-  //       reader.onload = function(e) {
-  //         // Show the selected image preview
-  //         selectedImage.attr('src', e.target.result);
-  //         selectedImage.parent().attr('href', e.target.result);  // Update Lightbox href
-  //         selectedImagePreview.show();
-  //       };
-
-  //       reader.readAsDataURL(fileInput.files[0]);
-  //     } else {
-  //       // Hide the selected image preview if no file selected
-  //       selectedImagePreview.hide();
-  //     }
-  //   });
-  // });
+  
 
   
   function getCookie(name) {
@@ -430,10 +424,17 @@
 });
 
 
+document.addEventListener('DOMContentLoaded', function () {
+    // Attach an event listener to the form submission
+
+
       // Attach an event listener to the form submission
       $('#edit-product-form').submit(function (e) {
         e.preventDefault();
         e.stopPropagation();
+
+       
+
 
         var queuedFiles = _this.getQueuedFiles();
 
@@ -484,6 +485,9 @@
           });
         
       });
+
+
+    });
 
       this.on("error", function (file, message) {
 

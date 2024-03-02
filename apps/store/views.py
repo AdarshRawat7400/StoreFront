@@ -376,7 +376,6 @@ class ProductDataView(CheckRolesMixin,BaseDatatableView):
             if row.images.first():
                 image_url = row.images.first().image.url
                 # Render the image column with the base64-encoded image
-                image_data = row.image  # Assuming 'image' contains base64-encoded data
                 image_tag = f'<a href="{image_url}" data-lightbox="category-images" data-title="{row.name}"><img src="{image_url}" alt="{row.name}" style="width: 100px; height: 50px;"></a>'
             else:
                 # Render a placeholder or alternative content when image is not available

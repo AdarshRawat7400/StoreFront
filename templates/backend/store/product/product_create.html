@@ -337,6 +337,10 @@
   }
   var csrftoken = getCookie('csrftoken');
   Dropzone.autoDiscover = false;
+  
+document.addEventListener('DOMContentLoaded', function () {
+    // Attach an event listener to the form submission
+
 
   $('#MultiFileUpload').dropzone({
     url: "{% url 'store:product-create' %}",
@@ -419,6 +423,8 @@
 
     }
   });
+
+});
 
 </script>
 {% endblock javascripts %}
