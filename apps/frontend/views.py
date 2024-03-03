@@ -242,10 +242,15 @@ class ItemDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        order_item = None
+        if self.request.user.is_authenticated:
+            product = kwargs.get('object')
+            order_item = OrderItem.objects.filter(customer=self.request.user,item=product, ordered=False).first()
 
         # Add additional context data here
         # For example, you can pass related objects or any other data you need
         context['related_items_list'] = Product.objects.filter(category=self.object.category)[:10]
+        context['order_item'] = order_item
         # context['special_offer'] = self.object.is_on_sale()
 
         return context
@@ -446,7 +451,7 @@ class CheckoutView(CheckRolesMixin, TemplateView):
 class AddToCartView(CheckRolesMixin,View):
     allowed_roles=('customer',)
     def get(self, request, slug):
-
+        referer = request.META.get('HTTP_REFERER')
         item = get_object_or_404(Product, slug=slug)
         order_item, created = OrderItem.objects.get_or_create(
             item=item,
@@ -461,11 +466,11 @@ class AddToCartView(CheckRolesMixin,View):
                 order_item.quantity += 1
                 order_item.save()
                 messages.info(request, "Item qty was updated.")
-                return redirect("frontend:order-summary")
+                return redirect(referer)
             else:
                 order.items.add(order_item)
                 messages.info(request, "Item was added to your cart.")
-                return redirect("frontend:order-summary")
+                return redirect(referer)
         else:
             ordered_date = timezone.now()
             order = Order.objects.create(
@@ -473,7 +478,7 @@ class AddToCartView(CheckRolesMixin,View):
             order.items.add(order_item)
             messages.info(request, "Item was added to your cart.")
         
-        return redirect("frontend:order-summary")
+        return redirect(referer)
     
 
     def post(self, request, slug):
@@ -507,9 +512,9 @@ class AddToCartView(CheckRolesMixin,View):
 class RemoveFromCartView(CheckRolesMixin,View):
     allowed_roles = ('customer',)
     def get(self, request, slug):
+        referer = request.META.get('HTTP_REFERER')
         item = get_object_or_404(Product, slug=slug)
         order_qs = Order.objects.filter(customer=request.user, ordered=False)
-
         if order_qs.exists():
             order = order_qs[0]
             # Check if the item is in the order
@@ -520,7 +525,7 @@ class RemoveFromCartView(CheckRolesMixin,View):
                 order_item_quantity.delete()
 
                 messages.info(request, "Item was removed from your cart.")
-                return redirect("frontend:order-summary")
+                return redirect(referer)
 
             # check if the order item is in the order
             # if order.items.filter(item__slug=item.slug).exists():
@@ -546,6 +551,8 @@ class RemoveFromCartView(CheckRolesMixin,View):
 class RemoveSingleItemFromCartView(CheckRolesMixin,View):
     allowed_roles = ('customer',)
     def get(self, request, slug, *args, **kwargs):
+        referer = request.META.get('HTTP_REFERER')
+
         item = get_object_or_404(Product, slug=slug)
         order_qs = Order.objects.filter(
             customer=request.user,
@@ -569,7 +576,7 @@ class RemoveSingleItemFromCartView(CheckRolesMixin,View):
                     order.items.remove(order_item)
 
                 messages.info(request, "This item qty was updated.")
-                return redirect("frontend:order-summary")
+                return redirect(referer)
 
             else:
                 messages.info(request, "Item was not in your cart.")
