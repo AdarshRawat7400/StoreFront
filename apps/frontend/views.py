@@ -29,6 +29,9 @@ from django.db.models import Max, Min, F, ExpressionWrapper, fields
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 
+from django.http import HttpResponse
+
+
 
 
 
@@ -869,4 +872,74 @@ class ProductSearchAjaxView(View):
         return JsonResponse(results, safe=False)
 
 
- 
+class PaginatedReviewsHtmxView(View):
+    template_name = 'reviews_partial.html'
+    reviews_per_page = 5  # Number of reviews per page
+    
+
+    def get(self, request, *args, **kwargs):
+        breakpoint()
+        # Fetch all reviews logic (replace this with your actual logic)
+        all_reviews = [
+            {'user': 'JohnDoe', 'rating': 4, 'comment': 'Great product!'},
+            {'user': 'JaneDoe', 'rating': 5, 'comment': 'Excellent quality!'},
+            # Add more reviews as needed
+        ]
+
+        # Get the page number from the request
+        page = request.GET.get('page', 1)
+
+        # Validate the page number
+        try:
+            page = int(page)
+            if page < 1:
+                raise ValueError("Page number should be 1 or greater.")
+        except ValueError:
+            page = 1
+
+        # Paginate the reviews
+        paginator = Paginator(all_reviews, self.reviews_per_page)
+
+        try:
+            reviews = paginator.page(page)
+        except PageNotAnInteger:
+            reviews = paginator.page(1)
+        except EmptyPage:
+            reviews = paginator.page(paginator.num_pages)
+
+        # Render paginated reviews HTML
+        reviews_html = render_to_string(self.template_name, {'reviews': reviews})
+
+        # Return the HTML as an HttpResponse
+        return HttpResponse(reviews_html)
+    template_name = 'frontend/reviews_partial.html'
+    reviews_per_page = 5  # Number of reviews per page
+
+    def get(self, request, *args, **kwargs):
+        # Fetch all reviews logic (replace this with your actual logic)
+        all_reviews = [
+            {'user': 'JohnDoe', 'rating': 4, 'comment': 'Great product!'},
+            {'user': 'JaneDoe', 'rating': 5, 'comment': 'Excellent quality!'},
+            {'user': 'JaneDoe', 'rating': 5, 'comment': 'Excellent quality!'},
+            {'user': 'JaneDoe', 'rating': 5, 'comment': 'Excellent quality!'},
+
+
+            # Add more reviews as needed
+        ]
+
+        # Paginate the reviews
+        page = request.GET.get('page', 1)
+        paginator = Paginator(all_reviews, self.reviews_per_page)
+
+        try:
+            reviews = paginator.page(page)
+        except PageNotAnInteger:
+            reviews = paginator.page(1)
+        except EmptyPage:
+            reviews = paginator.page(paginator.num_pages)
+
+        # Render paginated reviews HTML
+        reviews_html = render_to_string(self.template_name, {'reviews': reviews})
+
+        # Return the HTML as an HttpResponse
+        return HttpResponse(reviews_html)

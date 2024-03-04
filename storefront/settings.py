@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'phonenumber_field',
     "django_extensions",
     "django_ckeditor_5",
-    "gdstorage"
+    "gdstorage",
+    "django_htmx"
 
 ] + [
     'apps.core',
@@ -94,6 +95,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    "django_htmx.middleware.HtmxMiddleware"
 ]
 
 ROOT_URLCONF = 'storefront.urls'

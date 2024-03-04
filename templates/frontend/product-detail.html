@@ -2,6 +2,97 @@
 {% load static %}
 {% block content %}
 
+
+{% block stylesheets %}
+<style>
+	/* New rating and comment container styles */
+.rate-product-container {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.rate-product-container .rate-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.rate-product-container .rating {
+    margin-bottom: 15px;
+}
+
+.rate-product-container .fa {
+    font-size: 24px;
+    margin-right: 10px;
+    color: #ddd; /* Inactive star color */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.rate-product-container .fa:hover {
+    color: #ffc107; /* Hovered star color */
+}
+
+.rate-product-container .comment-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.rate-product-container .submit-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.rate-product-container .submit-btn:hover {
+    background-color: #0056b3;
+}
+
+       /* Custom styles for the review container */
+	   .review-container {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .user-info {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .rating {
+            margin-top: 10px;
+        }
+
+        .rating .fa {
+            font-size: 16px;
+            color: #ffd700;
+            margin-right: 3px;
+        }
+
+        .comment {
+            margin-top: 10px;
+            color: #555;
+        }
+		
+</style>
+
+
+{% endblock stylesheets %}
 	<!-- breadcrumb -->
 	<div class="bread-crumb bgwhite flex-w p-l-52 p-r-15 p-t-30 p-l-15-sm">
 		<a href="/" class="s-text16">
@@ -22,7 +113,7 @@
 	<!-- Product Detail -->
 	<div class="container bgwhite">
 		<div class="flex-w flex-sb">
-			<div class="w-size13 p-t-30 respon5" >
+			<div class="w-size14 p-t-30 respon5" >
 				<div class="wrap-slick3 flex-sb flex-w">
 					<div class="wrap-slick3-dots"></div>
 
@@ -168,13 +259,58 @@
 						<i class="down-mark fs-12 color1 fa fa-minus dis-none" aria-hidden="true"></i>
 						<i class="up-mark fs-12 color1 fa fa-plus" aria-hidden="true"></i>
 					</h5>
-
+				
 					<div class="dropdown-content dis-none p-t-15 p-b-23">
-						<p class="s-text8">
-							Fusce ornare mi vel risus porttitor dignissim. Nunc eget risus at ipsum blandit ornare vel sed velit. Proin gravida arcu nisl, a dignissim mauris placerat
-						</p>
+						<!-- Review Container -->
+						<div class="review-container">
+							<div class="user-info">JohnDoe</div>
+							<div class="rating">
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star"></span>
+							</div>
+							<div class="comment">
+								Fusce ornare mi vel risus porttitor dignissim. Nunc eget risus at ipsum blandit ornare vel sed velit. Proin gravida arcu nisl, a dignissim mauris placerat
+							</div>
+						</div>
+						<!-- Review Container -->
+						<div class="review-container">
+							<div class="user-info">JohnDoe</div>
+							<div class="rating">
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star"></span>
+							</div>
+							<div class="comment">
+								Fusce ornare mi vel risus porttitor dignissim. Nunc eget risus at ipsum blandit ornare vel sed velit. Proin gravida arcu nisl, a dignissim mauris placerat
+							</div>
+						</div>
+						<!-- End Review Container -->
+						
+    <!-- New rating and comment container -->
+    <div class="rate-product-container">
+        <h5 class="rate-header">Rate This Product</h5>
+
+        <div class="rating">
+            <span class="fa fa-star" data-rating="0.5"></span>
+            <span class="fa fa-star" data-rating="1.0"></span>
+            <span class="fa fa-star" data-rating="1.5"></span>
+            <span class="fa fa-star" data-rating="2.0"></span>
+            <span class="fa fa-star" data-rating="2.5"></span>
+            <!-- Add stars for 3.0 to 5.0 based on your requirement -->
+        </div>
+
+        <textarea class="comment-input" placeholder="Add your comment..."></textarea>
+
+        <button class="btn btn-primary btn-sm">Submit Review</button>
+    </div>
 					</div>
 				</div>
+				
 			</div>
 		</div>
 	</div>

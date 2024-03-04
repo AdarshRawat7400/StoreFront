@@ -1,4 +1,6 @@
 {% load static %}
+{% load django_htmx %}
+
 <!DOCTYPE html>
 <html lang="en">
   {% include "frontend/header.html" %}
@@ -64,6 +66,10 @@
         <!-- Specific Page JS goes HERE  -->
 
     {% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.10/htmx.min.js" integrity="sha512-9qpauSP4+dDIldsrdNEZ2Z7JoyLZGfJsAP2wfXnc3drOh+5NXOBxjlq3sGXKdulmN9W+iwLxRt42zKMa8AHEeg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    {% django_htmx_script %}
+
     {% endblock javascripts %}
     <!-- Specific Page CSS goes HERE  -->
     {% block stylesheets %}
@@ -71,3 +77,5 @@
 
   </body>
 </html>
+
+

@@ -25,6 +25,8 @@ urlpatterns = [
     path('auth0-callback/', Auth0CallbackAPIView.as_view(), name='auth0-callback'),
     path("logout/", LogoutView.as_view(), name="logout"),
     path('search-product/', ProductSearchAjaxView.as_view(), name='search-product'),
+    path('paginated_reviews_htmx/', PaginatedReviewsHtmxView.as_view(), name='paginated_reviews_htmx'),
+
 
 
 
