@@ -60,35 +60,94 @@
     background-color: #0056b3;
 }
 
-       /* Custom styles for the review container */
-	   .review-container {
-            border: 1px solid #e0e0e0;
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
+/* Custom styles for the review container */
+.review-container {
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
 
-        .user-info {
-            font-weight: bold;
-            color: #333;
-        }
+.user-info {
+    font-weight: bold;
+    color: #333;
+}
 
-        .rating {
-            margin-top: 10px;
-        }
+.rating {
+    margin-top: 10px;
+}
 
-        .rating .fa {
-            font-size: 16px;
-            color: #ffd700;
-            margin-right: 3px;
-        }
+.rating .fa {
+    font-size: 16px;
+    color: #ffd700;
+    margin-right: 3px;
+}
 
-        .comment {
-            margin-top: 10px;
-            color: #555;
-        }
-		
+.comment {
+    margin-top: 10px;
+    color: #555;
+}
+
+.pagination a {
+    display: inline-block;
+    margin-right: 5px; /* Adjust as needed for spacing between links */
+}
+
+/* Add this to your CSS file */
+.pagination-link {
+    margin-left: 10px; /* Adjust the value as needed for your desired padding */
+}
+
+.pagination {
+    margin-right: 0px;
+    margin-left: 0px;
+    margin-top: 10px;
+}
+
+/* Container for star ratings */
+.rate-product-container .rating-group {
+    display: inline-flex;
+}
+
+/* Hide radio inputs */
+.rate-product-container .rating__input {
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+/* Style for star labels */
+.rate-product-container .rating__label {
+    cursor: pointer;
+    padding: 0 0.1em;
+    font-size: 2rem;
+}
+
+/* Default star color */
+.rate-product-container .rating__icon--star {
+    color: #ddd; /* Default color for empty star */
+}
+
+/* Checked star color */
+.rate-product-container .rating__input:checked ~ .rating__label .rating__icon--star {
+    color: gold; /* Color for filled star */
+}
+
+/* Unchecked star color (white) */
+.rate-product-container .rating__label .rating__icon--star {
+    color: white;
+}
+
+/* Hover effect: all stars orange on rating group hover */
+.rate-product-container .rating-group:hover .rating__label .rating__icon--star {
+    color: orange;
+}
+
+/* Hover effect: hovered input's following siblings grey on hover */
+.rate-product-container .rating__input:hover ~ .rating__label .rating__icon--star {
+    color: #ddd;
+}
+
 </style>
 
 
@@ -253,65 +312,24 @@
 					</div>
 				</div>
 
-				<div class="wrap-dropdown-content bo7 p-t-15 p-b-14">
-					<h5 class="js-toggle-dropdown-content flex-sb-m cs-pointer m-text19 color0-hov trans-0-4">
-						Reviews (0)
+				<div class="wrap-dropdown-content bo7 p-t-15 p-b-14" id="reviews-container">
+					<h5 id="reviews-header" class="js-toggle-dropdown-content flex-sb-m cs-pointer m-text19 color0-hov trans-0-4">
+						<span id="reviews-count">Reviews (0)</span>
 						<i class="down-mark fs-12 color1 fa fa-minus dis-none" aria-hidden="true"></i>
 						<i class="up-mark fs-12 color1 fa fa-plus" aria-hidden="true"></i>
 					</h5>
+					
 				
-					<div class="dropdown-content dis-none p-t-15 p-b-23">
-						<!-- Review Container -->
-						<div class="review-container">
-							<div class="user-info">JohnDoe</div>
-							<div class="rating">
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star"></span>
-							</div>
-							<div class="comment">
-								Fusce ornare mi vel risus porttitor dignissim. Nunc eget risus at ipsum blandit ornare vel sed velit. Proin gravida arcu nisl, a dignissim mauris placerat
-							</div>
+					   
+						<div class="dropdown-content dis-none p-t-15 p-b-23" id="reviews-content">
+							<!-- Existing reviews go here -->
 						</div>
-						<!-- Review Container -->
-						<div class="review-container">
-							<div class="user-info">JohnDoe</div>
-							<div class="rating">
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star"></span>
-							</div>
-							<div class="comment">
-								Fusce ornare mi vel risus porttitor dignissim. Nunc eget risus at ipsum blandit ornare vel sed velit. Proin gravida arcu nisl, a dignissim mauris placerat
-							</div>
-						</div>
-						<!-- End Review Container -->
-						
-    <!-- New rating and comment container -->
-    <div class="rate-product-container">
-        <h5 class="rate-header">Rate This Product</h5>
-
-        <div class="rating">
-            <span class="fa fa-star" data-rating="0.5"></span>
-            <span class="fa fa-star" data-rating="1.0"></span>
-            <span class="fa fa-star" data-rating="1.5"></span>
-            <span class="fa fa-star" data-rating="2.0"></span>
-            <span class="fa fa-star" data-rating="2.5"></span>
-            <!-- Add stars for 3.0 to 5.0 based on your requirement -->
-        </div>
-
-        <textarea class="comment-input" placeholder="Add your comment..."></textarea>
-
-        <button class="btn btn-primary btn-sm">Submit Review</button>
-    </div>
-					</div>
-				</div>
+						 
+				
+					
 				
 			</div>
+		</div>
 		</div>
 	</div>
 
@@ -800,17 +818,167 @@
 
 
 {% block extra_scripts %}
-
 <script>
-	function handleClick(url) {
-		// Perform any additional logic you need
-		console.log("Button clicked! URL: " + url);
+    function handleClick(url) {
+        // Perform any additional logic you need
+        console.log("Button clicked! URL: " + url);
 
-		// You can redirect to the specified URL if needed
-		window.location.href = url;
-	}
-	function redirectLogin() {
+        // You can redirect to the specified URL if needed
+        window.location.href = url;
+    }
+
+    function redirectLogin() {
         window.location.href = "{% url 'frontend:auth0-login' %}";
     }
+
+    // JavaScript code for handling AJAX requests and updating the DOM
+    var reviewsUrl = "{% url 'frontend:reviews_ajax' %}";
+
+    // Initial load of reviews
+    $(document).ready(function () {
+        loadReviews(1);
+    });
+
+    // Function to load reviews via AJAX
+    function loadReviews(page) {
+        $.ajax({
+            type: 'GET',
+            url: reviewsUrl,
+            data: { page: page, per_page: 5, product_id: '{{object.id}}' },
+            success: function (response) {
+                // Assuming your response contains reviews and total_pages
+                displayReviews(response.reviews);
+                // Display pagination links
+                displayPagination(response.total_reviews, response.total_pages, page);
+            },
+            error: function (error) {
+                console.error('Error loading reviews:', error);
+            }
+        });
+    }
+
+    // Function to display reviews in the DOM
+    function displayReviews(reviews) {
+        var container = $('#reviews-content');
+        container.empty(); // Clear existing reviews and pagination
+
+        $.each(reviews, function (index, review) {
+            // Build and append each review container
+            var reviewContainer = '<div class="review-container">';
+            reviewContainer += '<div class="user-info">' + review.user + '</div>';
+            reviewContainer += '<div class="rating">' + getStars(review.rating) + '</div>';
+            reviewContainer += '<div class="comment">' + review.comment + '</div>';
+            reviewContainer += '</div>';
+
+            container.append(reviewContainer);
+        });
+
+        // Append the pagination container after 10 reviews
+        container.append('<div class="pagination" id="pagination-container"></div>');
+
+        // Append the new rating and comment container inside the dropdown
+        var rateProductContainer = '<div class="rate-product-container">' +
+            '<h5 class="rate-header">Rate This Product</h5>' +
+            '<div class="rating" id="star-rating-container">' +
+            '<span class="fa fa-star" data-rating="0.5"></span>' +
+            '<span class="fa fa-star" data-rating="1.0"></span>' +
+            '<span class="fa fa-star" data-rating="1.5"></span>' +
+            '<span class="fa fa-star" data-rating="2.0"></span>' +
+            '<span class="fa fa-star" data-rating="2.5"></span>' +
+            '<textarea class="comment-input" placeholder="Add your comment..." id="comment-input"></textarea>' +
+            '<button class="btn btn-primary btn-sm" onclick="submitReview()">Submit Review</button>' +
+            '</div>' +
+            '</div>';
+        container.append(rateProductContainer);
+
+        // Initialize star rating events after adding elements to the DOM
+        initializeStarRating();
+    }
+
+    // Function to display next and previous pagination links in the DOM
+    function displayPagination(totalReviews, totalPages, currentPage) {
+
+        // Display the total number of reviews in the header
+        var reviewsCount = $('#reviews-count');
+        reviewsCount.text('Reviews (' + totalReviews + ')');
+
+        var paginationContainer = $('#pagination-container');
+        paginationContainer.empty(); // Clear existing pagination
+
+        // Previous button
+        var prevLinkClass = (currentPage > 1) ? 'btn btn-primary btn-sm pagination-link' : 'btn btn-primary btn-sm pagination-link d-none';
+        var prevPaginationLink = $('<button class="' + prevLinkClass + '" onclick="loadReviews(' + (currentPage - 1) + ')">Previous</button>');
+        paginationContainer.append(prevPaginationLink);
+
+        // Next button with left padding for spacing
+        var nextLinkClass = (currentPage < totalPages) ? 'btn btn-primary btn-sm pagination-link ml-2' : 'btn btn-primary btn-sm pagination-link d-none';
+        var nextPaginationLink = $('<button class="' + nextLinkClass + '" onclick="loadReviews(' + (currentPage + 1) + ')">Next</button>');
+        paginationContainer.append(nextPaginationLink);
+    }
+
+   // Function to generate star icons based on the rating
+function getStars(rating) {
+    // Adjust based on your rating system
+    console.log("RATING ", rating);
+    var stars = '';
+    var roundedRating = Math.floor(rating); // Round down to the nearest whole number
+
+    for (var i = 1; i <= 5; i++) {
+        var iconClass = (i <= roundedRating) ? 'fa-star checked' : 'fa-star';
+        
+        // If the rating has a decimal part, consider adding a half star
+        if (i === roundedRating + 1 && rating % 1 !== 0) {
+            iconClass = 'fa-star-half checked';
+        }
+
+        stars += '<span class="fa ' + iconClass + '"></span>';
+    }
+    return stars;
+}
+
+
+    // Function to initialize star rating events
+    function initializeStarRating() {
+        $('#star-rating-container .fa-star').hover(
+            function () {
+                // Hover in
+                $(this).addClass('checked').prevAll().addClass('checked');
+            },
+            function () {
+                // Hover out
+                $(this).removeClass('checked').prevAll().removeClass('checked');
+            }
+        );
+
+        $('#star-rating-container .fa-star').click(function () {
+            // Set the selected rating
+            $(this).addClass('checked').prevAll().addClass('checked');
+            $(this).nextAll().removeClass('checked');
+
+            // Update the hidden input or perform any other actions as needed
+            var selectedRating = $(this).data('rating');
+            console.log('Selected Rating:', selectedRating);
+        });
+    }
+
+    // Function to submit a new review via AJAX
+    function submitReview() {
+        var rating = $('#star-rating-container .fa-star.checked').length; // Adjust based on your rating system
+        var comment = $('#comment-input').val();
+
+        $.ajax({
+            type: 'POST',
+            url: reviewsUrl,
+            data: { rating: rating, comment: comment },
+            success: function (response) {
+                // Handle success, maybe refresh the reviews
+                loadReviews(1); // Reload the first page after submitting a new review
+            },
+            error: function (error) {
+                console.error('Error submitting review:', error);
+            }
+        });
+    }
 </script>
+
 {% endblock extra_scripts %}

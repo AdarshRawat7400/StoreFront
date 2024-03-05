@@ -18,7 +18,7 @@ from apps.core.custom_model_fields import Base64Field
 from apps.core.utils import generate_random_password
 from apps.users.models import Admin, Users
 from .forms import CheckoutForm, CouponForm, ProfileUpdateForm, RefundForm
-from apps.store.models import Pages, Product, OrderItem, Order, BillingAddress, Coupon , Category
+from apps.store.models import Pages, Product, OrderItem, Order, BillingAddress, Coupon , Category, Review
 from apps.payments.models import Payment,Refund
 from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
@@ -872,74 +872,61 @@ class ProductSearchAjaxView(View):
         return JsonResponse(results, safe=False)
 
 
-class PaginatedReviewsHtmxView(View):
-    template_name = 'reviews_partial.html'
-    reviews_per_page = 5  # Number of reviews per page
-    
-
+class ReviewsAjaxView(View):
     def get(self, request, *args, **kwargs):
-        breakpoint()
-        # Fetch all reviews logic (replace this with your actual logic)
-        all_reviews = [
-            {'user': 'JohnDoe', 'rating': 4, 'comment': 'Great product!'},
-            {'user': 'JaneDoe', 'rating': 5, 'comment': 'Excellent quality!'},
-            # Add more reviews as needed
-        ]
 
-        # Get the page number from the request
-        page = request.GET.get('page', 1)
+        page = int(request.GET.get('page', 1))
+        per_page = int(request.GET.get('per_page', 10))
+        product_id = request.GET.get('product_id')
+        reviews = self.get_paginated_reviews(page, per_page,product_id)
+        total_reviews,total_pages = self.get_total_pages(per_page,product_id)
+        response_data = {
+            'reviews': reviews,
+            'total_pages': total_pages,
+            'total_reviews' : total_reviews,
+        }
 
-        # Validate the page number
-        try:
-            page = int(page)
-            if page < 1:
-                raise ValueError("Page number should be 1 or greater.")
-        except ValueError:
-            page = 1
+        return JsonResponse(response_data)
 
-        # Paginate the reviews
-        paginator = Paginator(all_reviews, self.reviews_per_page)
+    def post(self, request, *args, **kwargs):
+        user = request.user  # Assuming you have a logged-in user
+        product_id = int(request.POST.get('product_id'))  # Adjust based on your form data
+        rating = int(request.POST.get('rating'))
+        comment = request.POST.get('comment')
 
+        # Assuming you have a method to create a new review in your model
+        review = Review.objects.create(user=user, product_id=product_id, rating=rating, comment=comment)
+
+        response_data = {
+            'user': str(review.user),
+            'rating': review.rating,
+            'comment': review.comment,
+        }
+
+        return JsonResponse(response_data)
+
+    def get_paginated_reviews(self, page, per_page,product_id):
+        reviews_query = Review.objects.filter(product__id=product_id).order_by('-id')
+        paginator = Paginator(reviews_query, per_page)
+        
         try:
             reviews = paginator.page(page)
-        except PageNotAnInteger:
-            reviews = paginator.page(1)
         except EmptyPage:
             reviews = paginator.page(paginator.num_pages)
 
-        # Render paginated reviews HTML
-        reviews_html = render_to_string(self.template_name, {'reviews': reviews})
+        serialized_reviews = self.serialize_reviews(reviews)
+        return serialized_reviews
 
-        # Return the HTML as an HttpResponse
-        return HttpResponse(reviews_html)
-    template_name = 'frontend/reviews_partial.html'
-    reviews_per_page = 5  # Number of reviews per page
+    def get_total_pages(self, per_page,product_id):
+        total_reviews = Review.objects.filter(product__id=product_id).count()
+        return (total_reviews,(total_reviews + per_page - 1) // per_page)
 
-    def get(self, request, *args, **kwargs):
-        # Fetch all reviews logic (replace this with your actual logic)
-        all_reviews = [
-            {'user': 'JohnDoe', 'rating': 4, 'comment': 'Great product!'},
-            {'user': 'JaneDoe', 'rating': 5, 'comment': 'Excellent quality!'},
-            {'user': 'JaneDoe', 'rating': 5, 'comment': 'Excellent quality!'},
-            {'user': 'JaneDoe', 'rating': 5, 'comment': 'Excellent quality!'},
-
-
-            # Add more reviews as needed
-        ]
-
-        # Paginate the reviews
-        page = request.GET.get('page', 1)
-        paginator = Paginator(all_reviews, self.reviews_per_page)
-
-        try:
-            reviews = paginator.page(page)
-        except PageNotAnInteger:
-            reviews = paginator.page(1)
-        except EmptyPage:
-            reviews = paginator.page(paginator.num_pages)
-
-        # Render paginated reviews HTML
-        reviews_html = render_to_string(self.template_name, {'reviews': reviews})
-
-        # Return the HTML as an HttpResponse
-        return HttpResponse(reviews_html)
+    def serialize_reviews(self, reviews):
+        serialized_reviews = []
+        for review in reviews:
+            serialized_reviews.append({
+                'user': str(review.user),
+                'rating': review.rating,
+                'comment': review.comment,
+            })
+        return serialized_reviews
