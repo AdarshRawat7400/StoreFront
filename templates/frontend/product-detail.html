@@ -147,7 +147,42 @@
 .rate-product-container .rating__input:hover ~ .rating__label .rating__icon--star {
     color: #ddd;
 }
+/* Existing CSS for the static rating */
+.rating {
+    display: inline-block;
+    font-size: 1.5em;
+}
 
+.star {
+    color: #ffd700; /* Yellow star color */
+}
+
+.faded-star {
+    color: #d3d3d3; /* Faded grey star color */
+}
+
+/* New CSS for the interactive rating */
+#star-rating-container i {
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+#star-rating-container i.selected {
+    color: #ffd700;
+    filter: drop-shadow(0 0 3px #666);
+}
+
+.fas.fa-star {
+
+    color: #d3d3d3; /* Yellow star color */
+	
+}
+
+.fas.fa-star.selected {
+	font-size: 0.8em;
+    color: #ffd700;
+    filter: drop-shadow(0 0 3px #666);
+}
 </style>
 
 
@@ -837,9 +872,48 @@
     // Initial load of reviews
     $(document).ready(function () {
         loadReviews(1);
+
+	
     });
 
-    // Function to load reviews via AJAX
+	// Function to generate star icons HTML based on the rating
+function generateStarsHTML(rating) {
+    var starsHtml = '';
+    for (let i = 1; i <= 5; i++) {
+        var starClass = (i <= rating) ? 'fas fa-star selected' : 'fas fa-star';
+        starsHtml += '<i class="' + starClass + '"></i>';
+    }
+    return starsHtml;
+}
+
+// Function to initialize star rating events
+function initializeStarRating() {
+    var stars = Array.from(document.querySelectorAll("#star-rating-container i"));
+
+    stars.forEach((element) => {
+        element.addEventListener("click", (e) => {
+            rate(element);
+        });
+
+        element.addEventListener("mouseover", (e) => {
+            rate(element);
+        });
+    });
+}
+
+// Function to handle star rating
+function rate(element) {
+    var stars = Array.from(document.querySelectorAll("#star-rating-container i"));
+    var selectedRating = stars.indexOf(element);
+
+    stars.forEach((el, index) => {
+        el.classList.toggle("selected", index <= selectedRating);
+    });
+
+    // Update the data-rating attribute
+    document.getElementById('star-rating-container').setAttribute('data-rating', selectedRating + 1);
+}
+
     function loadReviews(page) {
         $.ajax({
             type: 'GET',
@@ -866,7 +940,7 @@
             // Build and append each review container
             var reviewContainer = '<div class="review-container">';
             reviewContainer += '<div class="user-info">' + review.user + '</div>';
-            reviewContainer += '<div class="rating">' + getStars(review.rating) + '</div>';
+			reviewContainer += '<div class="rating">' + getStars(review.rating) + '</div>';
             reviewContainer += '<div class="comment">' + review.comment + '</div>';
             reviewContainer += '</div>';
 
@@ -877,22 +951,20 @@
         container.append('<div class="pagination" id="pagination-container"></div>');
 
         // Append the new rating and comment container inside the dropdown
-        var rateProductContainer = '<div class="rate-product-container">' +
-            '<h5 class="rate-header">Rate This Product</h5>' +
-            '<div class="rating" id="star-rating-container">' +
-            '<span class="fa fa-star" data-rating="0.5"></span>' +
-            '<span class="fa fa-star" data-rating="1.0"></span>' +
-            '<span class="fa fa-star" data-rating="1.5"></span>' +
-            '<span class="fa fa-star" data-rating="2.0"></span>' +
-            '<span class="fa fa-star" data-rating="2.5"></span>' +
-            '<textarea class="comment-input" placeholder="Add your comment..." id="comment-input"></textarea>' +
-            '<button class="btn btn-primary btn-sm" onclick="submitReview()">Submit Review</button>' +
-            '</div>' +
-            '</div>';
-        container.append(rateProductContainer);
+    var rateProductContainer = '<div class="rate-product-container">' +
+        '<h5 class="rate-header">Rate This Product</h5>' +
+        '<div class="rating" id="star-rating-container" data-rating="0">' + // Initialize with zero rating
+        generateStarsHTML(0) + // Generate star icons based on the initial rating
+        '</div>' +
+        '<textarea class="comment-input" placeholder="Add your comment..." id="comment-input"></textarea>' +
+        '<button class="btn btn-primary btn-sm" onclick="submitReview()">Submit Review</button>' +
+        '</div>' +
+        '</div>';
+    container.append(rateProductContainer);
 
-        // Initialize star rating events after adding elements to the DOM
-        initializeStarRating();
+    // Add interactivity to the stars
+    initializeStarRating();
+
     }
 
     // Function to display next and previous pagination links in the DOM
@@ -916,50 +988,28 @@
         paginationContainer.append(nextPaginationLink);
     }
 
-   // Function to generate star icons based on the rating
+// Function to get star rating HTML based on the rating
 function getStars(rating) {
-    // Adjust based on your rating system
-    console.log("RATING ", rating);
-    var stars = '';
-    var roundedRating = Math.floor(rating); // Round down to the nearest whole number
+    var starsHtml = '';
+    var fullStars = Math.floor(rating);
+    var halfStar = rating % 1 !== 0;
 
-    for (var i = 1; i <= 5; i++) {
-        var iconClass = (i <= roundedRating) ? 'fa-star checked' : 'fa-star';
-        
-        // If the rating has a decimal part, consider adding a half star
-        if (i === roundedRating + 1 && rating % 1 !== 0) {
-            iconClass = 'fa-star-half checked';
-        }
-
-        stars += '<span class="fa ' + iconClass + '"></span>';
+    for (var i = 0; i < fullStars; i++) {
+        starsHtml += '<span class="star">&#9733;</span>'; // Unicode character for a solid star
     }
-    return stars;
+
+    if (halfStar) {
+        starsHtml += '<span class="star">&#9733;</span>'; // Add a half star if applicable
+    }
+
+    // Add remaining faded stars for unrated portion
+    for (var j = Math.ceil(rating); j < 5; j++) {
+        starsHtml += '<span class="faded-star">&#9733;</span>';
+    }
+
+    return starsHtml;
 }
 
-
-    // Function to initialize star rating events
-    function initializeStarRating() {
-        $('#star-rating-container .fa-star').hover(
-            function () {
-                // Hover in
-                $(this).addClass('checked').prevAll().addClass('checked');
-            },
-            function () {
-                // Hover out
-                $(this).removeClass('checked').prevAll().removeClass('checked');
-            }
-        );
-
-        $('#star-rating-container .fa-star').click(function () {
-            // Set the selected rating
-            $(this).addClass('checked').prevAll().addClass('checked');
-            $(this).nextAll().removeClass('checked');
-
-            // Update the hidden input or perform any other actions as needed
-            var selectedRating = $(this).data('rating');
-            console.log('Selected Rating:', selectedRating);
-        });
-    }
 
     // Function to submit a new review via AJAX
     function submitReview() {
